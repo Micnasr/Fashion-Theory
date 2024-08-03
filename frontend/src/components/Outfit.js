@@ -92,6 +92,27 @@ const Outfit = () => {
     }
   };
 
+  const fetchRating = async (currentUuids) => {
+    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
+
+    if (filteredUuids.length > 0) {
+      try {
+        const response = await fetch('/get_rating', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ uuids: filteredUuids }),
+        });
+        const result = await response.json();
+        console.log(`Rating: ${result.rating}%`);
+        setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
+      } catch (error) {
+        console.error('Error fetching rating:', error);
+      }
+    }
+  };
+
   const handleArrowClick = async (category, direction) => {
     const currentIndex = outfitIndex[category];
     const items = clothes[category];
@@ -108,41 +129,21 @@ const Outfit = () => {
       Shoes: clothes.Shoes[newOutfitIndex.Shoes]?.uuid,
     };
 
-    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
-
-    console.log(filteredUuids);
-
     const currentItem = items[newIndex];
 
     if (currentItem && currentItem.image === '/images/default-image.png') {
       await fetchImage(currentItem.uuid, category, newIndex);
     }
 
-    if (filteredUuids.length > 0) {
-      fetch('/get_rating', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uuids: filteredUuids }),
-      })
-        .then(response => response.json())
-        .then(result => {
-          console.log(`Rating: ${result.rating}%`);
-          setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
-        })
-        .catch(error => {
-          console.error('Error fetching rating:', error);
-        });
-    }
+    await fetchRating(currentUuids);
   };
 
-  const randomizeOutfit = () => {
+  const randomizeOutfit = async () => {
     const newOutfitIndex = {
-      Hats: Math.floor(Math.random() * clothes.Hats.length),
-      Tops: Math.floor(Math.random() * clothes.Tops.length),
-      Bottoms: Math.floor(Math.random() * clothes.Bottoms.length),
-      Shoes: Math.floor(Math.random() * clothes.Shoes.length),
+      Hats: clothes.Hats.length > 1 ? Math.floor(Math.random() * (clothes.Hats.length - 1)) + 1 : 0,
+      Tops: clothes.Tops.length > 1 ? Math.floor(Math.random() * (clothes.Tops.length - 1)) + 1 : 0,
+      Bottoms: clothes.Bottoms.length > 1 ? Math.floor(Math.random() * (clothes.Bottoms.length - 1)) + 1 : 0,
+      Shoes: clothes.Shoes.length > 1 ? Math.floor(Math.random() * (clothes.Shoes.length - 1)) + 1 : 0,
     };
 
     setOutfitIndex(newOutfitIndex);
@@ -156,6 +157,15 @@ const Outfit = () => {
         await fetchImage(currentItem.uuid, category, newIndex);
       }
     });
+
+    const currentUuids = {
+      Hats: clothes.Hats[newOutfitIndex.Hats]?.uuid,
+      Tops: clothes.Tops[newOutfitIndex.Tops]?.uuid,
+      Bottoms: clothes.Bottoms[newOutfitIndex.Bottoms]?.uuid,
+      Shoes: clothes.Shoes[newOutfitIndex.Shoes]?.uuid,
+    };
+
+    await fetchRating(currentUuids);
   };
 
   const generateOutfitOfTheDay = () => {
