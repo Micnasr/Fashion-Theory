@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactSpeedometer from "react-d3-speedometer"
 import './Outfit.css';
 
 const Outfit = () => {
@@ -79,7 +80,7 @@ const Outfit = () => {
 
       setClothes((prevClothes) => ({
         ...prevClothes,
-        [category]: prevClothes[category].map((item, idx) => 
+        [category]: prevClothes[category].map((item, idx) =>
           idx === newIndex ? { ...item, image: imageUrl } : item
         ),
       }));
@@ -136,6 +137,8 @@ const Outfit = () => {
     });
   };
 
+  const fit_check_value = 0.5;
+
   return (
     <div className="outfit-container">
       <div className="outfit-pane">
@@ -156,8 +159,8 @@ const Outfit = () => {
                 <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
                   <img src="/images/left-arrow.png" alt="Previous" />
                 </button>
-                <img 
-                  src={items[currentIndex]?.image || '/images/default-image.png'} 
+                <img
+                  src={items[currentIndex]?.image || '/images/default-image.png'}
                   alt={`${category} ${currentIndex + 1}`}
                   className="clothing-image"
                 />
@@ -170,7 +173,14 @@ const Outfit = () => {
         </div>
       </div>
 
+
       <div className="controls-pane">
+        <div className="fit-check">
+          <ReactSpeedometer minValue={0.0} maxValue={1.0} value={fit_check_value} segments={3} paddingVertical={0} width={400} segmentColors={["#FEC0C0", "#E0BBE4", "#9B5DE5"]} currentValueText='' />
+          <div className="fit-check-text-container">
+            <p className="fit-check-text">Fit Check: {fit_check_value > 0.66 ? "Fantastic Fashion!" : (fit_check_value > 0.33 ? "Superb Style!" : "Maybe try another outfit")}</p>
+          </div>
+        </div>
         <div className="outfit-controls">
           <button onClick={randomizeOutfit}>
             <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />

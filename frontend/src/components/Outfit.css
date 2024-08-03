@@ -13,12 +13,12 @@
 }
 
 .controls-pane {
-  flex: 1;
+  flex-direction: column;
+  flex: 2;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: space-evenly;
+  align-items: center;
   background-color: #f3f3f3;
-  padding-top: 100px;
 }
 
 .outfit-carousel {
@@ -65,13 +65,17 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;  /* Fixed width */
-  height: 40px; /* Fixed height */
-  transition: transform 0.2s ease; /* Smooth scaling transition */
+  width: 40px;
+  /* Fixed width */
+  height: 40px;
+  /* Fixed height */
+  transition: transform 0.2s ease;
+  /* Smooth scaling transition */
 }
 
 .arrow-btn:hover {
-  transform: translateY(-50%) scale(1.2); /* Scale up slightly on hover */
+  transform: translateY(-50%) scale(1.2);
+  /* Scale up slightly on hover */
 }
 
 .clothing-image {
@@ -83,29 +87,29 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 600px;
   gap: 15px;
 }
 
 .outfit-controls button {
   background-color: #E0BBE4;
   border: none;
-  padding: 15px; /* Controls the internal padding */
-  border-radius: 50%; /* Ensures the button is a circle */
-  width: 100px; /* Equal width and height to make the button a circle */
-  height: 100px; /* Equal width and height to make the button a circle */
+  padding: 15px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
   font-size: 24px;
   color: #FFFFFF;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  align-items: center; /* Centers the content (icon or text) inside the button */
-  transition: transform 0.2s ease; /* Smooth scaling transition */
+  align-items: center;
+  transition: transform 0.2s ease;
 }
 
 .outfit-controls button:hover {
   background-color: #9B5DE5;
-  transform: scale(1.1); /* Scale up slightly on hover */
+  transform: scale(1.1);
+  /* Scale up slightly on hover */
 }
 
 .outfit-icon {
@@ -119,4 +123,26 @@
 
 .right-arrow {
   margin-left: 200px;
+}
+
+.fit-check {
+  background-color: #f9f9f9;
+  border: none;
+  padding: 15px;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 24px;
+  color: #666666;
+}
+
+.fit-check-text {
+  justify-content: center;
+  justify-self: center;
+  background-color: #f9f9f9;
+}
+
+.fit-check-text-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
