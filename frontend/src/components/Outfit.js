@@ -1,64 +1,180 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Outfit.css';
 
 const Outfit = () => {
-  const [outfit, setOutfit] = useState({
-    hat: '/images/placeholders/hat-placeholder.png',
-    top: '/images/placeholders/top-placeholder.png',
-    bottoms: '/images/placeholders/bottoms-placeholder.png',
-    shoes: '/images/placeholders/shoes-placeholder.png',
+  const [outfitIndex, setOutfitIndex] = useState({
+    Hats: 0,
+    Tops: 0,
+    Bottoms: 0,
+    Shoes: 0,
+  });
+  const [clothes, setClothes] = useState({
+    Hats: [],
+    Tops: [],
+    Bottoms: [],
+    Shoes: [],
   });
 
+  useEffect(() => {
+    const fetchClothes = async () => {
+      try {
+        const response = await fetch('/get_available_clothes');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        const clothesByCategory = {
+          Hats: [],
+          Tops: [],
+          Bottoms: [],
+          Shoes: []
+        };
+
+        // Populate the clothesByCategory dictionary
+        data.forEach(item => {
+          switch (item.clothes_part) {
+            case 'top':
+              clothesByCategory.Hats.push(item);
+              break;
+            case 'upper_body':
+              clothesByCategory.Tops.push(item);
+              break;
+            case 'lower_body':
+              clothesByCategory.Bottoms.push(item);
+              break;
+            case 'bottom':
+              clothesByCategory.Shoes.push(item);
+              break;
+            default:
+              break;
+          }
+        });
+
+        setClothes(clothesByCategory);
+      } catch (error) {
+        console.error('Error fetching clothes:', error);
+      }
+    };
+
+    fetchClothes();
+  }, []);
+
+  const fetchImage = async (uuid) => {
+    try {
+      const response = await fetch('/get_image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uuid }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      return `data:image/png;base64,${result.image}`;
+    } catch (error) {
+      console.error('Error fetching image:', error);
+      return null;
+    }
+  };
+
+  const handleArrowClick = async (category, direction) => {
+    const items = clothes[category];
+
+    if (items && items.length > 0) {
+      setOutfitIndex((prevIndex) => {
+        const currentIndex = prevIndex[category];
+        const newIndex = (currentIndex + direction + items.length) % items.length;
+        return { ...prevIndex, [category]: newIndex };
+      });
+
+      const newIndex = (outfitIndex[category] + direction + items.length) % items.length;
+      const currentItem = items[newIndex];
+
+      if (currentItem && !currentItem.image) {
+        const imageUrl = await fetchImage(currentItem.uuid);
+        setClothes((prevClothes) => ({
+          ...prevClothes,
+          [category]: prevClothes[category].map((item, idx) => 
+            idx === newIndex ? { ...item, image: imageUrl } : item
+          ),
+        }));
+      }
+    }
+  };
+
   const randomizeOutfit = () => {
-    // Implement your logic here for randomizing outfit pieces
+    console.log("Randomize outfit function triggered");
   };
 
   const generateOutfitOfTheDay = () => {
-    // Implement your algorithm to generate a pleasing outfit
+    console.log("Generate outfit of the day function triggered");
   };
 
-  const saveOutfit = () => {
-    // Logic to save the current outfit (e.g., to local storage or backend)
+  const favouriteOutfit = () => {
+    console.log("Save outfit function triggered");
   };
 
   return (
     <div className="outfit-container">
-      <div className="outfit-carousel">
-        <div className="carousel-item">
-          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous hat */}}>{"<"}</button>
-          <img src={outfit.hat} alt="Hat" className="hat-image" />
-          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next hat */}}>{">"}</button>
-        </div>
+      <div className="outfit-pane">
+        <div className="outfit-carousel">
+          {['Hats', 'Tops', 'Bottoms', 'Shoes'].map((category) => {
+            const items = clothes[category] || [];
+            const currentIndex = outfitIndex[category];
 
-        <div className="carousel-item">
-          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous top */}}>{"<"}</button>
-          <img src={outfit.top} alt="Top" className="top-image" />
-          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next top */}}>{">"}</button>
-        </div>
+            const sizeClass = {
+              Hats: 'hat-size',
+              Tops: 'top-size',
+              Bottoms: 'bottom-size',
+              Shoes: 'shoe-size'
+            }[category];
 
-        <div className="carousel-item">
-          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous bottoms */}}>{"<"}</button>
-          <img src={outfit.bottoms} alt="Bottoms" className="bottoms-image" />
-          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next bottoms */}}>{">"}</button>
-        </div>
-
-        <div className="carousel-item">
-          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous shoes */}}>{"<"}</button>
-          <img src={outfit.shoes} alt="Shoes" className="shoes-image" />
-          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next shoes */}}>{">"}</button>
+            return (
+              <div className={`carousel-item ${sizeClass}`} key={category}>
+                {items.length > 0 ? (
+                  <>
+                    <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
+                      <img src="/images/left-arrow.png" alt="Previous" />
+                    </button>
+                    {items[currentIndex].image ? (
+                      <img 
+                        src={items[currentIndex].image}
+                        alt={`${category} ${currentIndex + 1}`}
+                        className="clothing-image"
+                      />
+                    ) : (
+                      <p>Loading...</p>
+                    )}
+                    <button className="arrow-btn right-arrow" onClick={() => handleArrowClick(category, 1)}>
+                      <img src="/images/right-arrow.png" alt="Next" />
+                    </button>
+                  </>
+                ) : (
+                  <p>No items available for {category}</p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      <div className="outfit-controls">
-        <button onClick={randomizeOutfit}>
-          <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />
-        </button>
-        <button onClick={generateOutfitOfTheDay}>
-          <img src="/images/outfit-of-the-day.png" alt="Outfit of the Day" className="outfit-icon" />
-        </button>
-        <button onClick={saveOutfit}>
-          <img src="/images/save.png" alt="Save Outfit" className="outfit-icon" />
-        </button>
+      <div className="controls-pane">
+        <div className="outfit-controls">
+          <button onClick={randomizeOutfit}>
+            <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />
+          </button>
+          <button onClick={generateOutfitOfTheDay}>
+            <img src="/images/outfit-of-the-day.png" alt="Outfit of the Day" className="outfit-icon" />
+          </button>
+          <button onClick={favouriteOutfit}>
+            <img src="/images/favourites.png" alt="Favourite Outfit" className="outfit-icon" />
+          </button>
+        </div>
       </div>
     </div>
   );
