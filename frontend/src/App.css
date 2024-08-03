@@ -4,14 +4,12 @@
 }
 
 .main-content {
-  flex: 1;
-  padding: 20px;
   transition: margin-left 0.3s ease;
-  margin-left: 0;
+  margin-top: 45px;
 }
 
 .main-content.with-sidebar {
-  margin-left: 150px; /* Same width as the sidebar */
+  margin-left: 200px; /* Same width as the sidebar */
 }
 
 @media screen and (max-width: 768px) {

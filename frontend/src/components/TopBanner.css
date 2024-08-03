@@ -15,7 +15,11 @@
   
   .top-banner h2 {
     margin: 0;
+    margin-top: 4px;
     margin-left: 10px; /* Adds a small gap between the menu icon and the title */
+    font-family: 'Arial', sans-serif; /* Example font change */
+    font-size: 24px; /* Example font size */
+    font-weight: bold; /* Example font weight */
   }
   
   .menu-icon {
