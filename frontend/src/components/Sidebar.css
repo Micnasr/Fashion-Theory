@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital@1&family=Pattaya&display=swap');
+
 .sidebar {
   background-color: #E0BBE4;
   position: fixed;
@@ -23,7 +25,7 @@
 
 .sidebar ul li {
   margin: 20px 0;
-  font-family: 'Arial', sans-serif; /* Example font change */
+  font-family: 'Arimo', sans-serif; /* Example font change */
   font-size: 24px; /* Example font size */
   font-weight: bold; /* Example font weight */
 }

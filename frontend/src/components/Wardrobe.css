@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital@1&family=Pattaya&display=swap');
+
 .wardrobe-container {
   display: flex;
   height: 100vh;
   background-color: #F4F4F9;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-sidebar {
@@ -11,6 +14,7 @@
   flex-direction: column;
   padding: 20px;
   margin-left: -8px;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-sidebar button {
@@ -23,17 +27,20 @@
   font-size: 18px;
   text-align: left;
   cursor: pointer;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-sidebar button.active {
   background-color: #E9CFEC;
   font-weight: bold;
   border-radius: 5px;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-sidebar button:hover {
   font-weight: bold;
   color: #000000;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-display {
@@ -43,14 +50,16 @@
   flex-wrap: wrap;
   align-content: flex-start;
   justify-content: flex-start;
-  gap: 10px; 
+  gap: 10px;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; 
+  gap: 10px;
   justify-content: flex-start;
+  font-family: 'Arimo', sans-serif;
 }
 
 .wardrobe-item {
@@ -62,4 +71,5 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  font-family: 'Arimo', sans-serif;
 }
