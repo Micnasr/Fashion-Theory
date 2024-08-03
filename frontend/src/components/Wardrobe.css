@@ -18,6 +18,7 @@
 }
 
 .wardrobe-sidebar button {
+  margin-left: 10px;
   margin-top: 15px;
   background: none;
   border: none;
@@ -31,7 +32,7 @@
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.1s ease; /* Smooth transition for background color and scale */
   display: flex;
-  align-items: center;
+  align-items: center;;
 }
 
 .wardrobe-sidebar button.active {
