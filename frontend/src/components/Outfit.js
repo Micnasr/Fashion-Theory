@@ -41,9 +41,15 @@ const Outfit = () => {
         <button onClick={() => {/* Logic to switch next shoes */}}>{">"}</button>
       </div>
       <div className="outfit-controls">
-        <button onClick={randomizeOutfit}>🔄</button>
-        <button onClick={generateOutfitOfTheDay}>⚛️</button>
-        <button onClick={saveOutfit}>📄</button>
+        <button onClick={randomizeOutfit}>
+          <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />
+        </button>
+        <button onClick={generateOutfitOfTheDay}>
+          <img src="/images/outfit-of-the-day.png" alt="Outfit of the Day" className="outfit-icon" />
+        </button>
+        <button onClick={saveOutfit}>
+          <img src="/images/save.png" alt="Save Outfit" className="outfit-icon" />
+        </button>
       </div>
     </div>
   );
