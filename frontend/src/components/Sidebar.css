@@ -45,3 +45,11 @@
 .sidebar ul li a:hover {
   color: #F07167;
 }
+
+.sidebar-icon {
+  width: 24px; /* Set the width to 24px */
+  height: 24px; /* Set the height to 24px */
+  margin-right: 10px; /* Space between the icon and the text */
+  vertical-align: middle; /* Aligns the icon with the text */
+  object-fit: contain; /* Ensures the image scales correctly without distortion */
+}
