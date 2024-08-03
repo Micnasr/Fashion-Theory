@@ -120,6 +120,22 @@ const Outfit = () => {
     console.log("Save outfit function triggered");
   };
 
+  const resetOutfit = () => {
+    setOutfitIndex({
+      Hats: 0,
+      Tops: 0,
+      Bottoms: 0,
+      Shoes: 0,
+    });
+
+    setClothes((prevClothes) => ({
+      Hats: prevClothes.Hats.map(item => ({ ...item, image: '/images/default-image.png' })),
+      Tops: prevClothes.Tops.map(item => ({ ...item, image: '/images/default-image.png' })),
+      Bottoms: prevClothes.Bottoms.map(item => ({ ...item, image: '/images/default-image.png' })),
+      Shoes: prevClothes.Shoes.map(item => ({ ...item, image: '/images/default-image.png' })),
+    }));
+  };
+
   return (
     <div className="outfit-container">
       <div className="outfit-pane">
@@ -170,6 +186,9 @@ const Outfit = () => {
           </button>
           <button onClick={favouriteOutfit}>
             <img src="/images/favourites.png" alt="Favourite Outfit" className="outfit-icon" />
+          </button>
+          <button onClick={resetOutfit}>
+            <img src="/images/reset.png" alt="Reset Outfit" className="outfit-icon" />
           </button>
         </div>
       </div>
