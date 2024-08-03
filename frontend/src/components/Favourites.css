@@ -1,6 +1,5 @@
 .favourites-container {
   padding: 20px;
-  height: 100vh;
   background-color: #F4F4F9;
   display: flex;
   flex-direction: column;
@@ -11,25 +10,29 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-start; /* Start items from the left */
   width: 100%;
 }
 
 .favourites-item {
-  width: 1000;
-  height: 85%;
+  width: 200px; /* Adjust width as needed */
   background-color: #DADADA;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  padding: 40px;
+  position: relative; /* Needed for the remove button */
+  padding: 10px;
+}
+
+.clothing-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between clothing items */
 }
 
 .favourites-item img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
   border-radius: 10px;
 }
