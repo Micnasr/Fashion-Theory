@@ -7,8 +7,11 @@
 
 .camera-content {
   display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 20px;
+  align-items: center;
+  position: relative;
 }
 
 .camera-display {
@@ -19,15 +22,16 @@
   justify-content: center;
   align-items: center;
   margin-right: 20px;
-  width: 60%;  /* Adjusted width */
-  height: 90vh; /* Adjusted height */
+  width: 60%;
+  height: 70vh;
 }
 
 .camera-controls {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
 .camera-controls button {
@@ -50,4 +54,35 @@ img, video {
   height: 100%;
   object-fit: cover;
   border-radius: 10px;  /* Match the parent border-radius */
+}
+
+.message {
+  font-size: 16px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.message.error {
+  color: red;
+}
+
+.message.success {
+  color: green;
+}
+
+.flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease-out;
+}
+
+.flash.active {
+  opacity: 1;
+  transition: opacity 0.1s ease-in;
 }
