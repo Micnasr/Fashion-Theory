@@ -26,6 +26,7 @@ yarn-error.log*
 .venv
 .mypy_cache
 **.pyc
+**__pycache__
 
 **clothes
 **clothing_metadata.json

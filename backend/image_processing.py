@@ -3,19 +3,16 @@ import io
 import numpy as np
 from uuid import uuid4
 from PIL import Image
-from rembg import remove
-from sklearn.cluster import KMeans
+from rembg import remove  # type: ignore
+from sklearn.cluster import KMeans  # type: ignore
 from image_classes import RGBWithPercent
 
-def generate_random_path() -> str:
-    clothing_path = os.path.join(os.getcwd(), "clothes", str(uuid4()))
-    os.makedirs(os.path.basename(clothing_path), exist_ok=True)
-    return clothing_path
 
 def remove_background(file_binary: bytes) -> bytes:
     # Remove the background
     output_image = remove(file_binary)
     return output_image
+
 
 # def get_average_rgb(image_path: str) -> tuple[int, int, int]:
 #     image = Image.open(image_path).convert("RGBA")
@@ -31,6 +28,7 @@ def remove_background(file_binary: bytes) -> bytes:
 #     avg_rgb = rgb_values.mean(axis=0)
 
 #     return tuple(map(int, avg_rgb))
+
 
 def get_dominant_colors_with_percentage(image_path: str, k: int = 3) -> list[RGBWithPercent]:
     image = Image.open(image_path).convert("RGBA")
@@ -48,4 +46,4 @@ def get_dominant_colors_with_percentage(image_path: str, k: int = 3) -> list[RGB
 
     percentages = label_counts / total_count
 
-    return [(tuple(map(int, colors[i])), percentages[i]) for i in range(k)]
+    return [(tuple(map(int, colors[i])), percentages[i]) for i in range(k)]  # type: ignore
