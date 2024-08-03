@@ -41,7 +41,6 @@ const Favourites = () => {
   const [savedOutfits, setSavedOutfits] = useState([]);
 
   useEffect(() => {
-
     fetch('/get_favourite_fits')
       .then(response => {
         if (!response.ok) {
@@ -60,13 +59,10 @@ const Favourites = () => {
   console.log("savedOutfits", savedOutfits);
   const onRemove = (uuid) => {
     setSavedOutfits((prevFits) => {
-      const updatedFits = { ...prevFits };
-      Object.keys(updatedFits).forEach(category => {
-        updatedFits[category] = updatedFits[category].filter(item => item.uuid !== uuid);
-      });
-      return updatedFits;
+      return prevFits.filter(outfit => outfit.uuid !== uuid);
     });
   };
+
   const handleRemove = async (uuid) => {
     try {
       const response = await fetch('/remove_fav_fit', {
@@ -91,16 +87,14 @@ const Favourites = () => {
     <div className="favourites-container">
       <div className="favourites-grid">
         {savedOutfits.map((outfit, index) => (
-          //Display four pieces of clothing as a cohesive outfit
           <div className="favourites-item" key={index}>
-            <button className="remove-button" onClick={() => (handleRemove(outfit.uuid))}>✖</button>
-            {outfit.clothes.map((clothing, index2) => (
-              <DisplayClothing uuid={clothing.uuid} />
-            ))}
+            <button className="remove-button" onClick={() => handleRemove(outfit.uuid)}>✖</button>
+            <div className="clothing-items">
+              {outfit.clothes.map((clothing, index2) => (
+                <DisplayClothing key={index2} uuid={clothing.uuid} />
+              ))}
+            </div>
           </div>
-          // <div className="favourites-item" key={index}>
-          //   <img src={outfit} alt={`Favourite ${index + 1}`} />
-          // </div>
         ))}
       </div>
     </div>
