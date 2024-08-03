@@ -31,6 +31,11 @@
     color: white;
     font-size: 24px;
     cursor: pointer;
+    transition: transform 0.1s ease; /* Smooth transition for scale */
+  }
+
+  .menu-icon:hover {
+    transform: scale(1.1); /* Slightly scale up the active item */
   }
   
   .profile-section {
