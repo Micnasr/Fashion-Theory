@@ -91,6 +91,9 @@ def calculate_complementarity_score(fit: Fit) -> float:
     total_complementarity = 0.0
     total_weight = 0.0
 
+    if len(fit.clothes) == 1:
+        return 50
+
     # Compare each clothing element with each other
     for i, clothing1 in enumerate(fit.clothes):
         for j, clothing2 in enumerate(fit.clothes):
