@@ -11,8 +11,36 @@ from image_classes import RGBWithPercent
 def remove_background(file_binary: bytes) -> bytes:
     # Remove the background
     output_image = remove(file_binary)
-    return output_image
+    
+    # Open the output image as an Image object
+    try:
+        img = Image.open(io.BytesIO(output_image)).convert("RGBA")
+    except Exception as e:
+        raise ValueError(f"Failed to open processed image: {e}")
 
+    # Calculate the bounding box of the non-transparent part of the image
+    bbox = img.getbbox()
+    if bbox:
+        # Crop the image to the bounding box
+        img = img.crop(bbox)
+
+    # Determine the size of the new canvas
+    canvas_size = (max(img.width, img.height), max(img.width, img.height))
+    
+    # Create a new blank canvas
+    canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
+    
+    # Center the image on the canvas
+    x = (canvas_size[0] - img.width) // 2
+    y = (canvas_size[1] - img.height) // 2
+    canvas.paste(img, (x, y), img)
+
+    # Save the centered image to a bytes buffer
+    centered_output = io.BytesIO()
+    canvas.save(centered_output, format="PNG")
+    centered_output.seek(0)
+    
+    return centered_output.getvalue()
 
 # def get_average_rgb(image_path: str) -> tuple[int, int, int]:
 #     image = Image.open(image_path).convert("RGBA")
