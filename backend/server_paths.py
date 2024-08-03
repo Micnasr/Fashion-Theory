@@ -39,10 +39,28 @@ def upload_file():
     return jsonify({"message": "File successfully uploaded"}), 200
 
 
+@app.route("/available_clothes")
+def get_available_clothes():
+    wardrobe = Wardrobe.load_clothes()
+    return list(map(lambda clothing: clothing.model_dump(), wardrobe.available_clothes)), 200
+
+
+@app.route("/fit")
+def get_fit():
+    wardrobe = Wardrobe.load_clothes()
+    # TODO fit algo here
+    # TODO take in colour here
+    # return wardrobe
+
+
 # TODO api for:
 # - getting all available clothes (metadata)
 # - getting a fit (metadata)
 # - getting an image of clothing (take in metadata, return image)
+# - removing a piece of clothing (via metadata/friendly name)
+# - saving/removing a fav fit
+# - clearing all available clothes
+# - get rating (from fit metadata)
 
 
 @app.route("/test")

@@ -1,4 +1,4 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, TypeAlias
 from enum import StrEnum
 import json
 import os
@@ -23,8 +23,21 @@ class ClothingInfo(BaseModel):
     labels: list[str] = Field(default_factory=lambda: [])
 
 
+class Fit(BaseModel):
+    top: ClothingInfo
+    upper_body: ClothingInfo
+    lower_body: ClothingInfo
+    bottom: ClothingInfo
+    friendly_name: str
+
+    def get_clothing(self) -> tuple[ClothingInfo, ClothingInfo, ClothingInfo, ClothingInfo]:
+        return (self.top, self.upper_body, self.lower_body, self.bottom)
+
+
 class Wardrobe(BaseModel):
     available_clothes: list[ClothingInfo]
+    current_fit: Fit | None = None
+    favourite_fits: list[Fit] = Field(default_factory=lambda: [])
 
     def get_gear(self, clothes_part: ClothesPart) -> list[ClothingInfo]:
         return list(filter(lambda clothing: clothing.clothes_part == clothes_part, self.available_clothes))
@@ -35,6 +48,12 @@ class Wardrobe(BaseModel):
     def remove_clothing_from_wardrobe(self, friendly_name: str) -> None:
         """Remove clothes matching friendly_name from wardrobe object. Does not affect the metadata (call save_clothes to make changes permanent)"""
         self.available_clothes = list(filter(lambda clothing: clothing.friendly_name != friendly_name, self.available_clothes))
+
+        for fit in self.favourite_fits:
+            for clothing in fit.get_clothing():
+                if clothing.friendly_name == friendly_name:
+                    self.favourite_fits.remove(fit)
+                    break
 
     def save_clothes(self) -> None:
         """Overwrite metadata json with clothes stored in the current object"""
