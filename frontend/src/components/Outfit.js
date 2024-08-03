@@ -31,20 +31,21 @@ const Outfit = () => {
           Shoes: []
         };
 
-        // Populate the clothesByCategory dictionary
+        // Populate the clothesByCategory dictionary with default images
         data.forEach(item => {
+          const defaultItem = { ...item, image: '/images/default-image.png' };
           switch (item.clothes_part) {
             case 'top':
-              clothesByCategory.Hats.push(item);
+              clothesByCategory.Hats.push(defaultItem);
               break;
             case 'upper_body':
-              clothesByCategory.Tops.push(item);
+              clothesByCategory.Tops.push(defaultItem);
               break;
             case 'lower_body':
-              clothesByCategory.Bottoms.push(item);
+              clothesByCategory.Bottoms.push(defaultItem);
               break;
             case 'bottom':
-              clothesByCategory.Shoes.push(item);
+              clothesByCategory.Shoes.push(defaultItem);
               break;
             default:
               break;
@@ -60,7 +61,7 @@ const Outfit = () => {
     fetchClothes();
   }, []);
 
-  const fetchImage = async (uuid) => {
+  const fetchImage = async (uuid, category, newIndex) => {
     try {
       const response = await fetch('/get_image', {
         method: 'POST',
@@ -75,10 +76,16 @@ const Outfit = () => {
       }
 
       const result = await response.json();
-      return `data:image/png;base64,${result.image}`;
+      const imageUrl = `data:image/png;base64,${result.image}`;
+
+      setClothes((prevClothes) => ({
+        ...prevClothes,
+        [category]: prevClothes[category].map((item, idx) => 
+          idx === newIndex ? { ...item, image: imageUrl } : item
+        ),
+      }));
     } catch (error) {
       console.error('Error fetching image:', error);
-      return null;
     }
   };
 
@@ -95,14 +102,8 @@ const Outfit = () => {
       const newIndex = (outfitIndex[category] + direction + items.length) % items.length;
       const currentItem = items[newIndex];
 
-      if (currentItem && !currentItem.image) {
-        const imageUrl = await fetchImage(currentItem.uuid);
-        setClothes((prevClothes) => ({
-          ...prevClothes,
-          [category]: prevClothes[category].map((item, idx) => 
-            idx === newIndex ? { ...item, image: imageUrl } : item
-          ),
-        }));
+      if (currentItem && currentItem.image === '/images/default-image.png') {
+        await fetchImage(currentItem.uuid, category, newIndex);
       }
     }
   };
@@ -141,15 +142,11 @@ const Outfit = () => {
                     <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
                       <img src="/images/left-arrow.png" alt="Previous" />
                     </button>
-                    {items[currentIndex].image ? (
-                      <img 
-                        src={items[currentIndex].image}
-                        alt={`${category} ${currentIndex + 1}`}
-                        className="clothing-image"
-                      />
-                    ) : (
-                      <p>Loading...</p>
-                    )}
+                    <img 
+                      src={items[currentIndex].image} 
+                      alt={`${category} ${currentIndex + 1}`}
+                      className="clothing-image"
+                    />
                     <button className="arrow-btn right-arrow" onClick={() => handleArrowClick(category, 1)}>
                       <img src="/images/right-arrow.png" alt="Next" />
                     </button>
