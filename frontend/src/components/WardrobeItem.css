@@ -1,0 +1,38 @@
+.wardrobe-item {
+    position: relative;
+    width: 150px;
+    height: 200px;
+    background-color: #DADADA;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  
+  .wardrobe-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; 
+    transition: opacity 0.2s;
+  }
+  
+  .wardrobe-item:hover .remove-button {
+    opacity: 1;
+  }

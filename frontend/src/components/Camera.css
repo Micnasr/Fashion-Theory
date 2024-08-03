@@ -35,14 +35,16 @@
 }
 
 .camera-controls button {
-  width: 80px;
-  height: 80px;
+  /* width: 80px; */
+  height: 40px;
   background-color: #E0BBE4;
   border: none;
   border-radius: 10px;
   font-size: 24px;
   color: #FFFFFF;
   cursor: pointer;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .camera-controls button:hover {
@@ -50,17 +52,17 @@
 }
 
 .dropdown {
-  width: 180px; /* Increased width */
-  height: 80px;
-  background-color: #FFFFFF; /* White background */
-  border: 1px solid #DADADA; /* Border to match the design */
+  height: 40px;
+  background-color: #E0BBE4; /* White background */
+  color: #FFFFFF;
+  border: none;
   border-radius: 10px;
-  font-size: 18px;
-  color: #333; /* Darker text color */
+  font-size: 24px;
   text-align: center;
   text-align-last: center;
   cursor: pointer;
-  padding: 0 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 img, video {
@@ -101,14 +103,37 @@ img, video {
   transition: opacity 0.1s ease-in;
 }
 
+.loading-spinner-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+} 
+
 .loading-spinner {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #3498db; /* Blue */
+  border: 20px solid #f3f3f3; /* Light grey */
+  border-top: 20px solid #9B5DE5; /* Blue */
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 100px;
+  height: 100px;
   animation: spin 2s linear infinite;
   margin-top: 10px;
+  z-index: 2;
+}
+
+.camera-icon {
+  width: 30px;
+  height: 30px; /* Set the height to 24px */
+  vertical-align: middle; /* Aligns the icon with the text */
+  padding-bottom: 2px;
+  color: #FFFFFF;
+  /* object-fit: contain; Ensures the image scales correctly without distortion */
 }
 
 @keyframes spin {
