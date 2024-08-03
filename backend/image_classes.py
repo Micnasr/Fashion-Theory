@@ -68,6 +68,12 @@ class Wardrobe(BaseModel):
         if not os.path.exists(CLOTHING_METADATA_PATH):
             return Wardrobe(available_clothes=[])
 
+        # For when file exists but doesnt contain anything - json.load throws an exception if the file is empty
+        with open(CLOTHING_METADATA_PATH, "r") as f:
+            temp = f.read()
+            if not temp:
+                return Wardrobe(available_clothes=[])
+
         with open(CLOTHING_METADATA_PATH, "r") as f:
             clothing_metadata = json.load(f)
 
