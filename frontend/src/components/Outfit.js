@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactSpeedometer from "react-d3-speedometer"
+import ReactSpeedometer from "react-d3-speedometer";
 import './Outfit.css';
 
 const Outfit = () => {
@@ -15,6 +15,7 @@ const Outfit = () => {
     Bottoms: [{ image: '/images/default-image.png' }],
     Shoes: [{ image: '/images/default-image.png' }],
   });
+  const [fitCheckValue, setFitCheckValue] = useState(0);
 
   useEffect(() => {
     const fetchClothes = async () => {
@@ -35,7 +36,7 @@ const Outfit = () => {
         data.forEach(item => {
           const clothingItem = { ...item, image: '/images/default-image.png' };
           switch (item.clothes_part) {
-            case 'top':
+            case 'hat':
               clothesByCategory.Hats.push(clothingItem);
               break;
             case 'upper_body':
@@ -62,6 +63,8 @@ const Outfit = () => {
   }, []);
 
   const fetchImage = async (uuid, category, newIndex) => {
+    if (!uuid) return; // Prevent fetching if UUID is invalid
+
     try {
       const response = await fetch('/get_image', {
         method: 'POST',
@@ -80,7 +83,7 @@ const Outfit = () => {
 
       setClothes((prevClothes) => ({
         ...prevClothes,
-        [category]: prevClothes[category].map((item, idx) =>
+        [category]: prevClothes[category].map((item, idx) => 
           idx === newIndex ? { ...item, image: imageUrl } : item
         ),
       }));
@@ -90,22 +93,47 @@ const Outfit = () => {
   };
 
   const handleArrowClick = async (category, direction) => {
+    const currentIndex = outfitIndex[category];
     const items = clothes[category];
+    const newIndex = (currentIndex + direction + items.length) % items.length;
 
-    if (items && items.length > 1) { // Ensure there is more than the default image
-      const currentIndex = outfitIndex[category];
-      const newIndex = (currentIndex + direction + items.length) % items.length;
+    const newOutfitIndex = { ...outfitIndex, [category]: newIndex };
 
-      setOutfitIndex((prevIndex) => ({
-        ...prevIndex,
-        [category]: newIndex,
-      }));
+    setOutfitIndex(newOutfitIndex);
 
-      const currentItem = items[newIndex];
+    const currentUuids = {
+      Hats: clothes.Hats[newOutfitIndex.Hats]?.uuid,
+      Tops: clothes.Tops[newOutfitIndex.Tops]?.uuid,
+      Bottoms: clothes.Bottoms[newOutfitIndex.Bottoms]?.uuid,
+      Shoes: clothes.Shoes[newOutfitIndex.Shoes]?.uuid,
+    };
 
-      if (currentItem && currentItem.image === '/images/default-image.png') {
-        await fetchImage(currentItem.uuid, category, newIndex);
-      }
+    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
+
+    console.log(filteredUuids);
+
+    const currentItem = items[newIndex];
+
+    if (currentItem && currentItem.image === '/images/default-image.png') {
+      await fetchImage(currentItem.uuid, category, newIndex);
+    }
+
+    if (filteredUuids.length > 0) {
+      fetch('/get_rating', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uuids: filteredUuids }),
+      })
+        .then(response => response.json())
+        .then(result => {
+          console.log(`Rating: ${result.rating}%`);
+          setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
+        })
+        .catch(error => {
+          console.error('Error fetching rating:', error);
+        });
     }
   };
 
@@ -145,9 +173,8 @@ const Outfit = () => {
       Bottoms: 0,
       Shoes: 0,
     });
+    setFitCheckValue(0); // Reset the fit check value
   };
-
-  const fit_check_value = 0.5;
 
   return (
     <div className="outfit-container">
@@ -169,8 +196,8 @@ const Outfit = () => {
                 <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
                   <img src="/images/left-arrow.png" alt="Previous" />
                 </button>
-                <img
-                  src={items[currentIndex]?.image || '/images/default-image.png'}
+                <img 
+                  src={items[currentIndex]?.image || '/images/default-image.png'} 
                   alt={`${category} ${currentIndex + 1}`}
                   className="clothing-image"
                 />
@@ -182,13 +209,12 @@ const Outfit = () => {
           })}
         </div>
       </div>
-
-
+      
       <div className="controls-pane">
         <div className="fit-check">
-          <ReactSpeedometer minValue={0.0} maxValue={1.0} value={fit_check_value} segments={3} paddingVertical={0} width={400} segmentColors={["#FEC0C0", "#E0BBE4", "#9B5DE5"]} currentValueText='' />
+          <ReactSpeedometer minValue={0.0} maxValue={1.0} value={fitCheckValue} segments={3} paddingVertical={0} width={400} segmentColors={["#FEC0C0", "#E0BBE4", "#9B5DE5"]} currentValueText='' />
           <div className="fit-check-text-container">
-            <p className="fit-check-text">Fit Check: {fit_check_value > 0.66 ? "Fantastic Fashion!" : (fit_check_value > 0.33 ? "Superb Style!" : "Maybe try another outfit")}</p>
+            <p className="fit-check-text">Fit Check: {fitCheckValue > 0.66 ? "Fantastic Fashion!" : (fitCheckValue > 0.33 ? "Superb Style!" : "Maybe try another outfit")}</p>
           </div>
         </div>
         <div className="outfit-controls">

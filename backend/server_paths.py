@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from consts import CLOTHING_STORAGE_DIR, CLOTHING_METADATA_PATH, generate_random_path
 from image_classes import Wardrobe, ClothingInfo, ClothesPart, Fit
-from image_processing import remove_background, get_dominant_colors_with_percentage
+from image_processing import remove_background, get_dominant_colors_with_percentage, calculate_complementarity_score
 
 from PIL import Image
 
@@ -150,18 +150,21 @@ def get_rating():
     request_data = request.get_json()
     if "uuids" not in request_data:
         return jsonify({"error": "uuids identifier not found (required to get clothes for rating)"}), 400
+    
+    if len(request_data["uuids"]) == 0:
+        return
 
     wardrobe = Wardrobe.load_clothes()
+
+    print(request_data["uuids"])
 
     fit_clothing = []
     for name in request_data["uuids"]:
         fit_clothing.append(wardrobe.get_clothing_by_uuid(name))
 
-    if len(fit_clothing) != 4:
-        return jsonify({"error": f"Did not find exactly 4 pieces of clothing to rate (got {len(fit_clothing)}. {fit_clothing})"}), 400
+    percent = calculate_complementarity_score(Fit(clothes=fit_clothing))
 
-    # TODO rating algo here
-    return "Rating: 5", 200
+    return jsonify({"rating": percent}), 200
 
 
 @app.route("/get_image", methods=["POST"])
