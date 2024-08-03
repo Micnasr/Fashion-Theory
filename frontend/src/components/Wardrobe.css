@@ -29,19 +29,27 @@
   cursor: pointer;
   font-family: 'Arimo', sans-serif;
   font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.1s ease; /* Smooth transition for background color and scale */
+  display: flex;
+  align-items: center;
 }
 
 .wardrobe-sidebar button.active {
   background-color: #E9CFEC;
   font-weight: bold;
   border-radius: 5px;
-  font-family: 'Arimo', sans-serif;
+  transform: scale(1.05); /* Slightly scale up the active button */
 }
 
 .wardrobe-sidebar button:hover {
   font-weight: bold;
   color: #000000;
-  font-family: 'Arimo', sans-serif;
+  transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+.wardrobe-sidebar button:active {
+  transform: scale(0.95); /* Slightly scale down on click */
+  transition: transform 0.1s ease; /* Quick and responsive click effect */
 }
 
 .wardrobe-display {
