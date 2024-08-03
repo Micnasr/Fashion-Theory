@@ -16,7 +16,8 @@ const Outfit = () => {
     Shoes: [{ image: '/images/default-image.png' }],
   });
   const [fitCheckValue, setFitCheckValue] = useState(0);
-  const [hasRandomized, setHasRandomized] = useState(false); // Track if randomization has occurred
+  const [hasRandomized, setHasRandomized] = useState(false); 
+  const [showFavoriteButton, setShowFavoriteButton] = useState(true); 
 
   useEffect(() => {
     const fetchClothes = async () => {
@@ -65,13 +66,13 @@ const Outfit = () => {
 
   useEffect(() => {
     if (!hasRandomized && (clothes.Hats.length > 1 || clothes.Tops.length > 1 || clothes.Bottoms.length > 1 || clothes.Shoes.length > 1)) {
-      randomizeOutfit(clothes); // Randomize outfit on load if there are available clothes
-      setHasRandomized(true); // Set flag to true after randomization
+      randomizeOutfit(clothes);
+      setHasRandomized(true); 
     }
   }, [clothes, hasRandomized]);
 
   const fetchImage = async (uuid, category, newIndex) => {
-    if (!uuid) return; // Prevent fetching if UUID is invalid
+    if (!uuid) return;
 
     try {
       const response = await fetch('/get_image', {
@@ -114,7 +115,7 @@ const Outfit = () => {
         });
         const result = await response.json();
         console.log(`Rating: ${result.rating}%`);
-        setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
+        setFitCheckValue(result.rating / 100);
       } catch (error) {
         console.error('Error fetching rating:', error);
       }
@@ -144,6 +145,7 @@ const Outfit = () => {
     }
 
     await fetchRating(currentUuids);
+    setShowFavoriteButton(true);
   };
 
   const randomizeOutfit = async (clothesByCategory = clothes) => {
@@ -176,6 +178,7 @@ const Outfit = () => {
     };
 
     await fetchRating(currentUuids);
+    setShowFavoriteButton(true);
   };
 
   const generateOutfitOfTheDay = () => {
@@ -204,8 +207,9 @@ const Outfit = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const result = await response.text(); // Parse the response as text
+        const result = await response.text(); 
         console.log('Favourite outfit saved:', result);
+        setShowFavoriteButton(false);
       } catch (error) {
         console.error('Error saving favourite outfit:', error);
       }
@@ -219,7 +223,8 @@ const Outfit = () => {
       Bottoms: 0,
       Shoes: 0,
     });
-    setFitCheckValue(0); // Reset the fit check value
+    setFitCheckValue(0);
+    setShowFavoriteButton(true);
   };
 
   return (
@@ -270,9 +275,11 @@ const Outfit = () => {
           <button onClick={generateOutfitOfTheDay}>
             <img src="/images/outfit-of-the-day.png" alt="Outfit of the Day" className="outfit-icon" />
           </button>
-          <button onClick={favouriteOutfit}>
-            <img src="/images/favourites.png" alt="Favourite Outfit" className="outfit-icon" />
-          </button>
+          {showFavoriteButton && (
+            <button onClick={favouriteOutfit}>
+              <img src="/images/favourites.png" alt="Favourite Outfit" className="outfit-icon" />
+            </button>
+          )}
           <button onClick={resetOutfit}>
             <img src="/images/reset.png" alt="Reset Outfit" className="outfit-icon" />
           </button>
