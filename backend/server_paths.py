@@ -2,6 +2,7 @@ import os
 import io
 import shutil
 import base64
+import itertools
 
 from flask import Flask, request, jsonify
 from pydantic import BaseModel
@@ -76,12 +77,12 @@ def get_favourite_fits():
     return pydantic_list_to_json(wardrobe.favourite_fits), 200
 
 
-@app.route("/get_fit")
-def get_fit():
-    wardrobe = Wardrobe.load_clothes()
-    # TODO fit algo here
-    # TODO take in colour here maybe
-    return pydantic_list_to_json(wardrobe.available_clothes[:4]), 200
+# @app.route("/get_fit")
+# def get_fit():
+#     wardrobe = Wardrobe.load_clothes()
+#     # TODO fit algo here
+#     # TODO take in colour here maybe
+#     return pydantic_list_to_json(wardrobe.available_clothes[:4]), 200
 
 
 @app.route("/clear_wardrobe")
@@ -182,6 +183,48 @@ def get_image():
         image_data = base64.b64encode(f.read()).decode("utf-8")
 
     return jsonify({"image": image_data}), 200
+
+
+@app.route("/get_optimal_fit")
+def get_optimal_fit():
+    wardrobe = Wardrobe.load_clothes()
+
+    optimal_fits: list[tuple[Fit, float]] = []
+
+    # Get a list of all possible permutations of 3 or 4 clothes where no two clothes can be for the same body part
+    tops = wardrobe.get_gear(ClothesPart.top)
+    bottoms = wardrobe.get_gear(ClothesPart.bottom)
+    upper_bodies = wardrobe.get_gear(ClothesPart.upper_body)
+    lower_bodies = wardrobe.get_gear(ClothesPart.lower_body)
+
+    clothing_combos4 = itertools.product(tops, bottoms, upper_bodies, lower_bodies)
+    clothing_combos3 = itertools.product(bottoms, upper_bodies, lower_bodies)
+    for combo in itertools.chain(clothing_combos4, clothing_combos3):
+        fit = Fit(clothes=list(combo))
+        score = calculate_complementarity_score(fit)
+        if score > 0.5:
+            optimal_fits.append((fit, score))
+
+    optimal_fits.sort(key=lambda x: x[1], reverse=True)
+    optimal_fits_ = list(map(lambda x: x[0], optimal_fits))
+    optimal_clothes = optimal_fits_[0]
+    uuids = list(map(lambda clothing: clothing.uuid, optimal_clothes.clothes))
+
+    indices = [None] * 4
+    if len(optimal_clothes.clothes) != 4:
+        indices[0] = 0
+
+    for clothing in optimal_clothes.clothes:
+        if clothing.clothes_part == ClothesPart.top:
+            indices[0] = tops.index(clothing)
+        if clothing.clothes_part == ClothesPart.upper_body:
+            indices[1] = upper_bodies.index(clothing)
+        if clothing.clothes_part == ClothesPart.lower_body:
+            indices[2] = lower_bodies.index(clothing)
+        if clothing.clothes_part == ClothesPart.bottom:
+            indices[3] = bottoms.index(clothing)
+
+    return jsonify({"optimal_index_groups": indices, "uuids": uuids}), 200
 
 
 # TODO api for:
