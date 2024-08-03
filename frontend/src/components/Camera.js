@@ -113,9 +113,9 @@ const Camera = () => {
             }}
           >
             <option value="" disabled>Select Category</option>
-            <option value="top">Hat</option>
-            <option value="upper_body">Upper Body</option>
-            <option value="lower_body">Lower Body</option>
+            <option value="top">Hats</option>
+            <option value="upper_body">Tops</option>
+            <option value="lower_body">Bottoms</option>
             <option value="bottom">Shoes</option>
           </select>
         </div>
