@@ -55,6 +55,9 @@ const Camera = () => {
 
     const result = await response.json();
     alert(result.message);
+
+    // Reset the state to go back to the initial camera view
+    resetPhoto();
   };
 
   return (
@@ -68,9 +71,14 @@ const Camera = () => {
           )}
         </div>
         <div className="camera-controls">
-          <button onClick={capturePhoto}>+</button>
-          <button onClick={resetPhoto}>✖</button>
-          <button onClick={handleSubmit}>📄</button>
+          {capturedImage ? (
+            <>
+              <button onClick={resetPhoto}>✖</button>
+              <button onClick={handleSubmit}>📄</button>
+            </>
+          ) : (
+            <button onClick={capturePhoto}>+</button>
+          )}
         </div>
       </div>
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
