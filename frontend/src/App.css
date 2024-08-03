@@ -35,7 +35,9 @@
   flex-direction: column;
   margin-left: -20px;
   font-family: 'Pattaya', sans-serif;
+  font-size: xx-large;
 }
+
 .unauthorized h1 {
   font-weight: normal;
 }
@@ -43,17 +45,17 @@
 .login-button {
     background-color: #E0BBE4;
     color: white;
-    padding: 8px 12px;
+    padding: 20px 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 25px;
     font-family: 'Arimo', sans-serif;
     transition: background-color 0.3s ease;
     margin-left: 15px;
     margin-right: 15px; /* Adds space between the logout button and the profile icon */
   }
   
-  .login-button:hover {
-    background-color: #E9CFEC;
-  }
+.login-button:hover {
+  background-color: #E9CFEC;
+}
