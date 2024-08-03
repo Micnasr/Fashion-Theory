@@ -4,7 +4,7 @@
   top: 50px; /* Adjust this to match the height of your top banner */
   left: -300px; /* Sidebar width (250px) minus 10px */
   width: 200px;
-  height: calc(100vh - 60px); /* Adjust for banner height */
+  height: 100vh; /* Adjust for banner height */
   transform: translateX(10px); /* Start 10px to the left of the screen */
   transition: transform 0.3s ease, left 0.3s ease; /* Smooth transition for both properties */
   z-index: 1;
@@ -38,12 +38,13 @@
 }
 
 .sidebar ul li a.active {
-  background-color: #9B5DE5;
+  background-color: #E9CFEC;
   font-weight: bold;
 }
 
 .sidebar ul li a:hover {
-  color: #F07167;
+  font-weight: bold;
+  color: #000000;
 }
 
 .sidebar-icon {

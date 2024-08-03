@@ -6,10 +6,11 @@
   
   .wardrobe-sidebar {
     width: 100px;
-    background-color: #E0BBE4;
+    background-color: #c3aafe;
     display: flex;
     flex-direction: column;
     padding: 20px;
+    margin-left: -8px;
   }
   
   .wardrobe-sidebar button {
@@ -24,14 +25,14 @@
   }
   
   .wardrobe-sidebar button.active {
-    background-color: #9B5DE5;
+    background-color: #E9CFEC;
     font-weight: bold;
     border-radius: 5px;
   }
   
   .wardrobe-sidebar button:hover {
-    background-color: #F07167;
-    color: #FFFFFF;
+    font-weight: bold;
+    color: #000000;
   }
   
   .wardrobe-display {

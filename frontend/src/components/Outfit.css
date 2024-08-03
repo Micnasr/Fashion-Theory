@@ -59,3 +59,23 @@
     height: 50px; /* Set the height of the icon */
   }
   
+  /* Specific sizes for each type of clothing */
+.hat-image {
+  width: 100px; /* Width for hat image */
+  height: 100px;
+}
+
+.top-image {
+  width: 150px; /* Width for top image */
+  height: 150px;
+}
+
+.bottoms-image {
+  width: 120px; /* Width for bottoms image */
+  height: 150px;
+}
+
+.shoes-image {
+  width: 120px; /* Width for shoes image */
+  height: 80px;
+}

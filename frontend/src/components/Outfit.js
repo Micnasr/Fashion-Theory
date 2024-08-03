@@ -3,10 +3,10 @@ import './Outfit.css';
 
 const Outfit = () => {
   const [outfit, setOutfit] = useState({
-    hat: 'Hat 1',
-    top: 'Top 1',
-    bottoms: 'Bottom 1',
-    shoes: 'Shoes 1',
+    hat: '/images/placeholders/hat-placeholder.png',
+    top: '/images/placeholders/top-placeholder.png',
+    bottoms: '/images/placeholders/bottoms-placeholder.png',
+    shoes: '/images/placeholders/shoes-placeholder.png',
   });
 
   const randomizeOutfit = () => {
@@ -24,22 +24,31 @@ const Outfit = () => {
   return (
     <div className="outfit-container">
       <div className="outfit-carousel">
-        <button onClick={() => {/* Logic to switch previous hat */}}>{"<"}</button>
-        <img src={outfit.hat} alt="Hat" />
-        <button onClick={() => {/* Logic to switch next hat */}}>{">"}</button>
+        <div className="carousel-item">
+          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous hat */}}>{"<"}</button>
+          <img src={outfit.hat} alt="Hat" className="hat-image" />
+          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next hat */}}>{">"}</button>
+        </div>
 
-        <button onClick={() => {/* Logic to switch previous top */}}>{"<"}</button>
-        <img src={outfit.top} alt="Top" />
-        <button onClick={() => {/* Logic to switch next top */}}>{">"}</button>
+        <div className="carousel-item">
+          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous top */}}>{"<"}</button>
+          <img src={outfit.top} alt="Top" className="top-image" />
+          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next top */}}>{">"}</button>
+        </div>
 
-        <button onClick={() => {/* Logic to switch previous bottoms */}}>{"<"}</button>
-        <img src={outfit.bottoms} alt="Bottoms" />
-        <button onClick={() => {/* Logic to switch next bottoms */}}>{">"}</button>
+        <div className="carousel-item">
+          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous bottoms */}}>{"<"}</button>
+          <img src={outfit.bottoms} alt="Bottoms" className="bottoms-image" />
+          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next bottoms */}}>{">"}</button>
+        </div>
 
-        <button onClick={() => {/* Logic to switch previous shoes */}}>{"<"}</button>
-        <img src={outfit.shoes} alt="Shoes" />
-        <button onClick={() => {/* Logic to switch next shoes */}}>{">"}</button>
+        <div className="carousel-item">
+          <button className="arrow-btn left-arrow" onClick={() => {/* Logic to switch previous shoes */}}>{"<"}</button>
+          <img src={outfit.shoes} alt="Shoes" className="shoes-image" />
+          <button className="arrow-btn right-arrow" onClick={() => {/* Logic to switch next shoes */}}>{">"}</button>
+        </div>
       </div>
+
       <div className="outfit-controls">
         <button onClick={randomizeOutfit}>
           <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />
