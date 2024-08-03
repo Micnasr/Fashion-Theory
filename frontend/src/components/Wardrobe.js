@@ -28,7 +28,7 @@ const Wardrobe = () => {
         data.forEach(item => {
           switch (item.clothes_part) {
             case 'top':
-              clothesByCategory.Tops.push(item);
+              clothesByCategory.Hats.push(item);
               break;
             case 'upper_body':
               clothesByCategory.Tops.push(item);
