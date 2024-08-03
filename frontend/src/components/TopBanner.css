@@ -1,0 +1,28 @@
+.top-banner {
+    background-color: #9B5DE5;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: flex-start; /* Aligns items to the top */
+    justify-content: flex-start; /* Aligns items to the left */
+    position: fixed; /* Fixes the banner at the top of the viewport */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensures the banner spans the full width of the viewport */
+    height: auto; /* Adjusts height based on content, or set to a fixed value */
+    z-index: 2; /* Keeps it above other content */
+  }
+  
+  .top-banner h2 {
+    margin: 0;
+    margin-left: 10px; /* Adds a small gap between the menu icon and the title */
+  }
+  
+  .menu-icon {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  

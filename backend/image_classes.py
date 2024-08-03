@@ -4,7 +4,6 @@ import json
 import os
 
 from pydantic import BaseModel, Field
-
 from consts import CLOTHING_METADATA_PATH
 
 
@@ -15,9 +14,13 @@ class ClothesPart(StrEnum):
     bottom = "bottom"
 
 
+RGB: TypeAlias = tuple[int, int, int]
+RGBWithPercent: TypeAlias = tuple[RGB, float]
+
+
 class ClothingInfo(BaseModel):
     clothes_part: ClothesPart
-    avg_rgb: str
+    rgbs: list[RGBWithPercent]
     path: str
     friendly_name: str = ""
     labels: list[str] = Field(default_factory=lambda: [])

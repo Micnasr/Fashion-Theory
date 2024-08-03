@@ -4,7 +4,7 @@ import './Wardrobe.css';
 const Wardrobe = () => {
   const [selectedCategory, setSelectedCategory] = useState('Tops');
 
-  const categories = ['Hats', 'Tops', 'Bottoms', 'Shoes'];
+  const categories = ['Hats', 'Tops', 'Bottoms', 'Shoes']; // Correct order
 
   return (
     <div className="wardrobe-container">

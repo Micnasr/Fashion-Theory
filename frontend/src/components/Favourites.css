@@ -1,0 +1,34 @@
+.favourites-container {
+    padding: 20px;
+    height: 100vh;
+    background-color: #F4F4F9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .favourites-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .favourites-item {
+    width: 150px;
+    height: 200px;
+    background-color: #DADADA;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .favourites-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from consts import CLOTHING_STORAGE_DIR, CLOTHING_METADATA_PATH, generate_random_path
 from image_classes import Wardrobe, ClothingInfo, ClothesPart, Fit
-from image_processing import remove_background
+from image_processing import remove_background, get_dominant_colors_with_percentage
 
 from PIL import Image
 
@@ -44,8 +44,10 @@ def upload_file():
     file_path = generate_random_path()
     output_image.save(file_path)
 
-    # TODO take in clothing type, rgb info, friendly name, and any additional labels
-    clothing = ClothingInfo(path=file_path, avg_rgb="", clothes_part=ClothesPart.top)
+    rgbs_with_percent = get_dominant_colors_with_percentage(file_path)
+
+    # TODO get clothes part from drop down menu
+    clothing = ClothingInfo(path=file_path, rgbs=rgbs_with_percent, clothes_part=ClothesPart.top)
 
     wardrobe = Wardrobe.load_clothes()
     wardrobe.available_clothes.append(clothing)
