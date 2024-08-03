@@ -1,0 +1,45 @@
+.camera-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #F4F4F9;
+  }
+  
+  .camera-content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .camera-display {
+    flex: 3;
+    background-color: #DADADA;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .camera-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .camera-controls button {
+    width: 80px;
+    height: 80px;
+    background-color: #E0BBE4;
+    border: none;
+    border-radius: 10px;
+    font-size: 24px;
+    color: #FFFFFF;
+    cursor: pointer;
+  }
+  
+  .camera-controls button:hover {
+    background-color: #9B5DE5;
+  }
+  

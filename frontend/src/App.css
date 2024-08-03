@@ -1,16 +1,21 @@
 .app {
   display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #E0BBE4;
-  padding: 20px;
+  flex-direction: column;
 }
 
 .main-content {
   flex: 1;
-  background-color: #F4F4F9;
   padding: 20px;
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+}
+
+.main-content.with-sidebar {
+  margin-left: 150px; /* Same width as the sidebar */
+}
+
+@media screen and (max-width: 768px) {
+  .main-content.with-sidebar {
+    margin-left: 0;
+  }
 }

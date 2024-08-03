@@ -2,30 +2,21 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ isVisible }) => {
   return (
-    <div className="sidebar">
-      <h2 className="logo">Fashion Theory</h2>
+    <div className={`sidebar ${isVisible ? 'visible' : ''}`}>
       <ul>
         <li>
-          <NavLink to="/camera" activeClassName="active">
-            📷 Camera
-          </NavLink>
+          <NavLink to="/camera">📷 Camera</NavLink>
         </li>
         <li>
-          <NavLink to="/wardrobe" activeClassName="active">
-            👗 Wardrobe
-          </NavLink>
+          <NavLink to="/wardrobe">👗 Wardrobe</NavLink>
         </li>
         <li>
-          <NavLink to="/" activeClassName="active">
-            👕 Outfit
-          </NavLink>
+          <NavLink to="/">👕 Outfit</NavLink>
         </li>
         <li>
-          <NavLink to="/favourites" activeClassName="active">
-            ❤️ Favourites
-          </NavLink>
+          <NavLink to="/favourites">❤️ Favourites</NavLink>
         </li>
       </ul>
     </div>

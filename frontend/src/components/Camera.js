@@ -24,17 +24,19 @@ const Camera = () => {
 
   return (
     <div className="camera-container">
-      <div className="camera-display">
-        {capturedImage ? (
-          <img src={capturedImage} alt="Captured" />
-        ) : (
-          <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-        )}
-      </div>
-      <div className="camera-controls">
-        <button onClick={capturePhoto}>+</button>
-        <button onClick={resetPhoto}>✖</button>
-        <button onClick={savePhoto}>Save</button>
+      <div className="camera-content">
+        <div className="camera-display">
+          {capturedImage ? (
+            <img src={capturedImage} alt="Captured" />
+          ) : (
+            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+          )}
+        </div>
+        <div className="camera-controls">
+          <button onClick={capturePhoto}>+</button>
+          <button onClick={resetPhoto}>✖</button>
+          <button onClick={savePhoto}>📄</button>
+        </div>
       </div>
     </div>
   );
