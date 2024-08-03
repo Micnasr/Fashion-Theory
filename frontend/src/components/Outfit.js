@@ -109,7 +109,24 @@ const Outfit = () => {
   };
 
   const randomizeOutfit = () => {
-    console.log("Randomize outfit function triggered");
+    const newOutfitIndex = {
+      Hats: Math.floor(Math.random() * clothes.Hats.length),
+      Tops: Math.floor(Math.random() * clothes.Tops.length),
+      Bottoms: Math.floor(Math.random() * clothes.Bottoms.length),
+      Shoes: Math.floor(Math.random() * clothes.Shoes.length),
+    };
+
+    setOutfitIndex(newOutfitIndex);
+
+    // Fetch images if the random item hasn't been loaded yet
+    Object.keys(newOutfitIndex).forEach(async (category) => {
+      const newIndex = newOutfitIndex[category];
+      const currentItem = clothes[category][newIndex];
+
+      if (currentItem && currentItem.image === '/images/default-image.png') {
+        await fetchImage(currentItem.uuid, category, newIndex);
+      }
+    });
   };
 
   const generateOutfitOfTheDay = () => {
@@ -121,7 +138,6 @@ const Outfit = () => {
   };
 
   const resetOutfit = () => {
-    // Reset the index of each category to 0 without modifying the existing clothes
     setOutfitIndex({
       Hats: 0,
       Tops: 0,
