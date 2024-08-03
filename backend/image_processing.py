@@ -1,11 +1,12 @@
 import os
 import io
 import numpy as np
+import colorsys
 from uuid import uuid4
 from PIL import Image
 from rembg import remove  # type: ignore
 from sklearn.cluster import KMeans  # type: ignore
-from image_classes import RGBWithPercent
+from image_classes import RGB, RGBWithPercent, Fit
 
 
 def remove_background(file_binary: bytes) -> bytes:
@@ -57,7 +58,6 @@ def remove_background(file_binary: bytes) -> bytes:
 
 #     return tuple(map(int, avg_rgb))
 
-
 def get_dominant_colors_with_percentage(image_path: str, k: int = 3) -> list[RGBWithPercent]:
     image = Image.open(image_path).convert("RGBA")
     np_image = np.array(image)
@@ -75,3 +75,44 @@ def get_dominant_colors_with_percentage(image_path: str, k: int = 3) -> list[RGB
     percentages = label_counts / total_count
 
     return [(tuple(map(int, colors[i])), percentages[i]) for i in range(k)]  # type: ignore
+
+def rgb_to_hsv(rgb: RGB) -> tuple[float, float, float]:
+    """Convert RGB to HSV color space."""
+    return colorsys.rgb_to_hsv(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0)
+
+def color_complementarity(hsv1: tuple[float, float, float], hsv2: tuple[float, float, float]) -> float:
+    """Calculate the complementarity score between two HSV colors."""
+    hue_diff = abs(hsv1[0] - hsv2[0])
+    complementarity_score = 1 - min(hue_diff, 1 - hue_diff)
+    return complementarity_score
+
+def calculate_complementarity_score(fit: Fit) -> float:
+    """Calculate how well the colors complement each other in the list of outfits."""
+    total_complementarity = 0.0
+    total_weight = 0.0
+
+    # Compare each clothing element with each other
+    for i, clothing1 in enumerate(fit.clothes):
+        for j, clothing2 in enumerate(fit.clothes):
+            if i >= j:
+                # Avoid double counting pairs and self-comparison
+                continue  
+            
+            for (rgb1, percent1) in clothing1.rgbs:
+                hsv1 = rgb_to_hsv(rgb1)
+                
+                for (rgb2, percent2) in clothing2.rgbs:
+                    hsv2 = rgb_to_hsv(rgb2)
+                    
+                    # Calculate the complementarity score
+                    complementarity = color_complementarity(hsv1, hsv2)
+                    
+                    # Weight the complementarity by the color dominance percentages
+                    weight = percent1 * percent2
+                    total_complementarity += complementarity * weight
+                    total_weight += weight
+
+    # Return the weighted average complementarity score as a percentage
+    if total_weight == 0:
+        return 0.0
+    return (total_complementarity / total_weight) * 100
