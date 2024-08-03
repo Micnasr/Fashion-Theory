@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -5,15 +6,16 @@ import Camera from './components/Camera';
 import Wardrobe from './components/Wardrobe';
 import Outfit from './components/Outfit';
 import Favourites from './components/Favourites';
+import Upload from './components/Upload'; // Import the new Upload component
 import TopBanner from './components/TopBanner';
 import './App.css';
 import { useAuth0 } from '@auth0/auth0-react';
 
 function LoginButton() {
-  const {loginWithRedirect} = useAuth0();
+  const { loginWithRedirect } = useAuth0();
 
   return (
-      <button className="login-button" onClick={() => loginWithRedirect()}>Log in</button>
+    <button className="login-button" onClick={() => loginWithRedirect()}>Log in</button>
   )
 };
 
@@ -42,9 +44,10 @@ const App = () => {
             <>
               <Routes>
                 <Route path="/" element={<Outfit />} />
-                <Route path="/camera" element={<Camera />} />
-                <Route path="/wardrobe" element={<Wardrobe />} />
                 <Route path="/favourites" element={<Favourites />} />
+                <Route path="/wardrobe" element={<Wardrobe />} />
+                <Route path="/camera" element={<Camera />} />
+                <Route path="/upload" element={<Upload />} />
               </Routes>
             </>
           )}
