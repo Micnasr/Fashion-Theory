@@ -121,18 +121,12 @@ const Outfit = () => {
   };
 
   const resetOutfit = () => {
+    // Reset the index of each category to 0 without modifying the existing clothes
     setOutfitIndex({
       Hats: 0,
       Tops: 0,
       Bottoms: 0,
       Shoes: 0,
-    });
-
-    setClothes({
-      Hats: [{ image: '/images/default-image.png' }],
-      Tops: [{ image: '/images/default-image.png' }],
-      Bottoms: [{ image: '/images/default-image.png' }],
-      Shoes: [{ image: '/images/default-image.png' }],
     });
   };
 
