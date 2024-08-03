@@ -15,14 +15,11 @@ def remove_background(file_binary: bytes) -> bytes:
     # Open the output image as an Image object
     try:
         img = Image.open(io.BytesIO(output_image)).convert("RGBA")
-        img.verify() 
-        img = Image.open(io.BytesIO(output_image)).convert("RGBA")
     except Exception as e:
-        raise ValueError(f"Failed to open and verify processed image: {e}")
+        raise ValueError(f"Failed to open processed image: {e}")
 
     # Calculate the bounding box of the non-transparent part of the image
     bbox = img.getbbox()
-
     if bbox:
         # Crop the image to the bounding box
         img = img.crop(bbox)
@@ -44,7 +41,6 @@ def remove_background(file_binary: bytes) -> bytes:
     centered_output.seek(0)
     
     return centered_output.getvalue()
-
 
 # def get_average_rgb(image_path: str) -> tuple[int, int, int]:
 #     image = Image.open(image_path).convert("RGBA")
