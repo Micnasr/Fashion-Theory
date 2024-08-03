@@ -11,17 +11,10 @@ def generate_random_path() -> str:
     os.makedirs(os.path.basename(clothing_path), exist_ok=True)
     return clothing_path
 
-def remove_background(input_path: str, output_path: str) -> None:
-    # Open the input image
-    with open(input_path, "rb") as input_file:
-        input_image = input_file.read()
-
+def remove_background(file_binary: bytes) -> bytes:
     # Remove the background
-    output_image = remove(input_image)
-
-    # Save the result to the output path
-    with open(output_path, "wb") as output_file:
-        output_file.write(output_image)
+    output_image = remove(file_binary)
+    return output_image
 
 def get_average_rgb(image_path: str) -> tuple[int, int, int]:
     image = Image.open(image_path).convert("RGBA")

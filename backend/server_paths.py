@@ -1,9 +1,15 @@
-from flask import Flask, request, jsonify
 import os
+import io
+
+from flask import Flask, request, jsonify
 from pydantic import BaseModel
 
 from consts import CLOTHING_STORAGE_DIR, CLOTHING_METADATA_PATH, generate_random_path
 from image_classes import Wardrobe, ClothingInfo, ClothesPart
+from image_processing import remove_background
+
+from PIL import Image
+
 
 app = Flask(__name__)
 # app.config["UPLOAD_FOLDER"] = CLOTHING_STORAGE_DIR
@@ -28,14 +34,18 @@ def upload_file():
     if not file:
         return jsonify({"error": f"File appears as None: {file}"}), 400
 
-    # TODO remove background of file
-    # TODO get colour info for BG
+    file_binary = file.read()
+    output_image_bytes = remove_background(file_binary)
 
+    # Create an image object from the byte data
+    output_image = Image.open(io.BytesIO(output_image_bytes))
+
+    # Save the result to a file path
     file_path = generate_random_path()
-    file.save(file_path)
+    output_image.save(file_path)
 
     # TODO take in clothing type, rgb info, friendly name, and any additional labels
-    clothing = ClothingInfo(path=file_path)
+    clothing = ClothingInfo(path=file_path, avg_rgb="", clothes_part=ClothesPart.top)
 
     wardrobe = Wardrobe.load_clothes()
     wardrobe.available_clothes.append(clothing)
