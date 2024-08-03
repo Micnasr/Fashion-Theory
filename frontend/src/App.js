@@ -7,8 +7,15 @@ import Outfit from './components/Outfit';
 import Favourites from './components/Favourites';
 import TopBanner from './components/TopBanner';
 import './App.css';
-import LoginButton from './components/LoginButton';
 import { useAuth0 } from '@auth0/auth0-react';
+
+function LoginButton() {
+  const {loginWithRedirect} = useAuth0();
+
+  return (
+      <button className="login-button" onClick={() => loginWithRedirect()}>Log in</button>
+  )
+};
 
 const App = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
