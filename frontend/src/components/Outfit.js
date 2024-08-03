@@ -16,6 +16,7 @@ const Outfit = () => {
     Shoes: [{ image: '/images/default-image.png' }],
   });
   const [fitCheckValue, setFitCheckValue] = useState(0);
+  const [hasRandomized, setHasRandomized] = useState(false); // Track if randomization has occurred
 
   useEffect(() => {
     const fetchClothes = async () => {
@@ -36,7 +37,7 @@ const Outfit = () => {
         data.forEach(item => {
           const clothingItem = { ...item, image: '/images/default-image.png' };
           switch (item.clothes_part) {
-            case 'hat':
+            case 'top':
               clothesByCategory.Hats.push(clothingItem);
               break;
             case 'upper_body':
@@ -61,6 +62,13 @@ const Outfit = () => {
 
     fetchClothes();
   }, []);
+
+  useEffect(() => {
+    if (!hasRandomized && (clothes.Hats.length > 1 || clothes.Tops.length > 1 || clothes.Bottoms.length > 1 || clothes.Shoes.length > 1)) {
+      randomizeOutfit(clothes); // Randomize outfit on load if there are available clothes
+      setHasRandomized(true); // Set flag to true after randomization
+    }
+  }, [clothes, hasRandomized]);
 
   const fetchImage = async (uuid, category, newIndex) => {
     if (!uuid) return; // Prevent fetching if UUID is invalid
@@ -92,6 +100,27 @@ const Outfit = () => {
     }
   };
 
+  const fetchRating = async (currentUuids) => {
+    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
+
+    if (filteredUuids.length > 0) {
+      try {
+        const response = await fetch('/get_rating', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ uuids: filteredUuids }),
+        });
+        const result = await response.json();
+        console.log(`Rating: ${result.rating}%`);
+        setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
+      } catch (error) {
+        console.error('Error fetching rating:', error);
+      }
+    }
+  };
+
   const handleArrowClick = async (category, direction) => {
     const currentIndex = outfitIndex[category];
     const items = clothes[category];
@@ -108,41 +137,23 @@ const Outfit = () => {
       Shoes: clothes.Shoes[newOutfitIndex.Shoes]?.uuid,
     };
 
-    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
-
-    console.log(filteredUuids);
-
     const currentItem = items[newIndex];
 
     if (currentItem && currentItem.image === '/images/default-image.png') {
       await fetchImage(currentItem.uuid, category, newIndex);
     }
 
-    if (filteredUuids.length > 0) {
-      fetch('/get_rating', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uuids: filteredUuids }),
-      })
-        .then(response => response.json())
-        .then(result => {
-          console.log(`Rating: ${result.rating}%`);
-          setFitCheckValue(result.rating / 100); // Convert percentage to a value between 0 and 1
-        })
-        .catch(error => {
-          console.error('Error fetching rating:', error);
-        });
-    }
+    await fetchRating(currentUuids);
   };
 
-  const randomizeOutfit = () => {
+  const randomizeOutfit = async (clothesByCategory = clothes) => {
+    if (!clothesByCategory || !Object.keys(clothesByCategory).length) return;
+
     const newOutfitIndex = {
-      Hats: Math.floor(Math.random() * clothes.Hats.length),
-      Tops: Math.floor(Math.random() * clothes.Tops.length),
-      Bottoms: Math.floor(Math.random() * clothes.Bottoms.length),
-      Shoes: Math.floor(Math.random() * clothes.Shoes.length),
+      Hats: clothesByCategory.Hats.length > 1 ? Math.floor(Math.random() * clothesByCategory.Hats.length) : 0,
+      Tops: clothesByCategory.Tops.length > 1 ? Math.floor(Math.random() * (clothesByCategory.Tops.length - 1)) + 1 : 0,
+      Bottoms: clothesByCategory.Bottoms.length > 1 ? Math.floor(Math.random() * (clothesByCategory.Bottoms.length - 1)) + 1 : 0,
+      Shoes: clothesByCategory.Shoes.length > 1 ? Math.floor(Math.random() * (clothesByCategory.Shoes.length - 1)) + 1 : 0,
     };
 
     setOutfitIndex(newOutfitIndex);
@@ -150,12 +161,21 @@ const Outfit = () => {
     // Fetch images if the random item hasn't been loaded yet
     Object.keys(newOutfitIndex).forEach(async (category) => {
       const newIndex = newOutfitIndex[category];
-      const currentItem = clothes[category][newIndex];
+      const currentItem = clothesByCategory[category][newIndex];
 
       if (currentItem && currentItem.image === '/images/default-image.png') {
         await fetchImage(currentItem.uuid, category, newIndex);
       }
     });
+
+    const currentUuids = {
+      Hats: clothesByCategory.Hats[newOutfitIndex.Hats]?.uuid,
+      Tops: clothesByCategory.Tops[newOutfitIndex.Tops]?.uuid,
+      Bottoms: clothesByCategory.Bottoms[newOutfitIndex.Bottoms]?.uuid,
+      Shoes: clothesByCategory.Shoes[newOutfitIndex.Shoes]?.uuid,
+    };
+
+    await fetchRating(currentUuids);
   };
 
   const generateOutfitOfTheDay = () => {
@@ -218,7 +238,7 @@ const Outfit = () => {
           </div>
         </div>
         <div className="outfit-controls">
-          <button onClick={randomizeOutfit}>
+          <button onClick={() => randomizeOutfit(clothes)}>
             <img src="/images/randomize.png" alt="Randomize" className="outfit-icon" />
           </button>
           <button onClick={generateOutfitOfTheDay}>
