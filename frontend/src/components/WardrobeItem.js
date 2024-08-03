@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './WardrobeItem.css';
-import Modal from './Modal'; // Import the modal component
+import Modal from './Modal';
 
 const WardrobeItem = ({ uuid, index, onRemove }) => {
   const [imageSrc, setImageSrc] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
-
+  const [isModalVisible, setIsModalVisible] = useState(false); 
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -22,7 +21,7 @@ const WardrobeItem = ({ uuid, index, onRemove }) => {
         }
 
         const result = await response.json();
-        setImageSrc(`data:image/png;base64,${result.image}`); // Using base64 encoded image string
+        setImageSrc(`data:image/png;base64,${result.image}`); 
       } catch (error) {
         console.error('Error fetching image:', error);
       }

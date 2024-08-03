@@ -129,9 +129,9 @@ def calculate_complementarity_score(fit: Fit) -> float:
 
     penalty = 1.0
     if len(fit.clothes) == 2:
-        penalty = 0.5
+        penalty = 0.75
 
     if len(fit.clothes) == 3:
-        penalty = 0.75
+        penalty = 0.90
 
     return (total_complementarity / total_weight) * 100 * penalty
