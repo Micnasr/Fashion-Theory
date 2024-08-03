@@ -2,6 +2,8 @@ from typing import Any, ClassVar, TypeAlias
 from enum import StrEnum
 import json
 import os
+from uuid import uuid4
+from threading import Lock
 
 from pydantic import BaseModel, Field
 from consts import CLOTHING_METADATA_PATH
@@ -22,22 +24,17 @@ class ClothingInfo(BaseModel):
     clothes_part: ClothesPart
     rgbs: list[RGBWithPercent]
     path: str
-    friendly_name: str = ""
+    uuid: str = Field(default_factory=lambda: str(uuid4()))
     labels: list[str] = Field(default_factory=lambda: [])
 
 
 class Fit(BaseModel):
-    top: ClothingInfo
-    upper_body: ClothingInfo
-    lower_body: ClothingInfo
-    bottom: ClothingInfo
-    friendly_name: str
-
-    def get_clothing(self) -> tuple[ClothingInfo, ClothingInfo, ClothingInfo, ClothingInfo]:
-        return (self.top, self.upper_body, self.lower_body, self.bottom)
+    clothes: list[ClothingInfo]
+    uuid: str = Field(default_factory=lambda: str(uuid4()))
 
 
 class Wardrobe(BaseModel):
+    metadata_lock: ClassVar[Lock] = Lock()
     available_clothes: list[ClothingInfo]
     # current_fit: Fit | None = None # shouldnt need to record this - frontend should get all info needed for current fit on the fly
     favourite_fits: list[Fit] = Field(default_factory=lambda: [])
@@ -45,27 +42,30 @@ class Wardrobe(BaseModel):
     def get_gear(self, clothes_part: ClothesPart) -> list[ClothingInfo]:
         return list(filter(lambda clothing: clothing.clothes_part == clothes_part, self.available_clothes))
 
-    def get_clothing_by_name(self, friendly_name: str) -> list[ClothingInfo]:
-        return list(filter(lambda clothing: clothing.friendly_name == friendly_name, self.available_clothes))
+    def get_clothing_by_uuid(self, uuid: str) -> ClothingInfo:
+        for clothing in self.available_clothes:
+            if clothing.uuid == uuid:
+                return clothing
+        raise ValueError(f"Could not find clothing with uuid {uuid}")
 
-    def remove_clothing_from_wardrobe(self, friendly_name: str) -> None:
-        """Remove clothes matching friendly_name from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
-        self.available_clothes = list(filter(lambda clothing: clothing.friendly_name != friendly_name, self.available_clothes))
+    def remove_clothing_from_wardrobe(self, uuid: str) -> None:
+        """Remove clothes matching uuid from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
+        self.available_clothes = list(filter(lambda clothing: clothing.uuid != uuid, self.available_clothes))
 
         for fit in self.favourite_fits:
-            for clothing in fit.get_clothing():
-                if clothing.friendly_name == friendly_name:
+            for clothing in fit.clothes:
+                if clothing.uuid == uuid:
                     self.favourite_fits.remove(fit)
                     break
 
-    def remove_fit_from_favourites(self, friendly_name: str) -> None:
-        """Remove fit matching friendly_name from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
-        self.favourite_fits = list(filter(lambda fit: fit.friendly_name != friendly_name, self.favourite_fits))
+    def remove_fit_from_favourites(self, uuid: str) -> None:
+        """Remove fit matching uuid from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
+        self.favourite_fits = list(filter(lambda fit: fit.uuid != uuid, self.favourite_fits))
 
     def save_clothes(self) -> None:
         """Overwrite metadata json with clothes stored in the current object"""
         with open(CLOTHING_METADATA_PATH, "w") as f:
-            f.write(self.model_dump_json())
+            f.write(self.model_dump_json(indent=2))
 
     @staticmethod
     def load_clothes() -> "Wardrobe":

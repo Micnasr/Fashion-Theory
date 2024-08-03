@@ -1,5 +1,6 @@
 import os
 import io
+import shutil
 
 from flask import Flask, request, jsonify
 from pydantic import BaseModel
@@ -49,9 +50,10 @@ def upload_file():
     # TODO get clothes part from drop down menu
     clothing = ClothingInfo(path=file_path, rgbs=rgbs_with_percent, clothes_part=ClothesPart.top)
 
-    wardrobe = Wardrobe.load_clothes()
-    wardrobe.available_clothes.append(clothing)
-    wardrobe.save_clothes()
+    with Wardrobe.metadata_lock:
+        wardrobe = Wardrobe.load_clothes()
+        wardrobe.available_clothes.append(clothing)
+        wardrobe.save_clothes()
 
     return jsonify({"message": "File successfully uploaded"}), 200
 
@@ -78,55 +80,69 @@ def get_fit():
 
 @app.route("/clear_wardrobe")
 def clear_wardrobe():
-    Wardrobe(available_clothes=[]).save_clothes()
+    with Wardrobe.metadata_lock:
+        Wardrobe(available_clothes=[]).save_clothes()
+        shutil.rmtree(CLOTHING_STORAGE_DIR)
     return "Successfully cleared wardrobe", 200
 
 
-@app.route("/remove_clothing", mode=["POST"])
+@app.route("/remove_clothing", methods=["POST"])
 def remove_clothing():
-    if "friendly_name" not in request.form:
-        return jsonify({"error": "friendly_name identifier not found (required to remove clothing)"}), 400
+    request_data = request.get_json()
+    if "uuid" not in request_data:
+        return jsonify({"error": "uuid identifier not found (required to remove clothing)"}), 400
 
-    wardrobe = Wardrobe.load_clothes()
-    wardrobe.remove_clothing_from_wardrobe(request.form["friendly_name"])
-    wardrobe.save_clothes()
+    with Wardrobe.metadata_lock:
+        wardrobe = Wardrobe.load_clothes()
+        wardrobe.remove_clothing_from_wardrobe(request_data["uuid"])
+        wardrobe.save_clothes()
 
-    return f"Successfully removed {request.form['friendly_name']} from wardrobe", 200
+    return f"Successfully removed {request_data['uuid']} from wardrobe", 200
 
 
-@app.route("/save_fav_fit", mode=["POST"])
+@app.route("/save_fav_fit", methods=["POST"])
 def save_fav_fit():
-    if "fit" not in request.form:
-        return jsonify({"error": "fit identifier not found (required to save fit)"}), 400
+    request_data = request.get_json()
+    if "uuids" not in request_data:
+        return jsonify({"error": "list of uuids not found (param required to save fit)"}), 400
 
-    fit = Fit(**request.form)
-    wardrobe = Wardrobe.load_clothes()
-    wardrobe.favourite_fits.append(fit)
-    wardrobe.save_clothes()
+    print(f"uuids: {request_data['uuids']}")
+
+    with Wardrobe.metadata_lock:
+        wardrobe = Wardrobe.load_clothes()
+        print(f"wardrobe: {wardrobe}")
+        print(f"available_clothes: {wardrobe.available_clothes}")
+        clothes = list(map(lambda uuid: wardrobe.get_clothing_by_uuid(uuid), request_data["uuids"]))
+        fit = Fit(clothes=clothes)
+        wardrobe.favourite_fits.append(fit)
+        wardrobe.save_clothes()
     return f"Successfully added fit {fit} to the list of favourite fits", 200
 
 
-@app.route("/remove_fav_fit", mode=["POST"])
+@app.route("/remove_fav_fit", methods=["POST"])
 def remove_fav_fit():
-    if "friendly_name" not in request.form:
-        return jsonify({"error": "friendly_name identifier not found (required to remove favourite fit)"}), 400
+    request_data = request.get_json()
+    if "uuid" not in request_data:
+        return jsonify({"error": "uuid identifier not found (required to remove favourite fit)"}), 400
 
-    wardrobe = Wardrobe.load_clothes()
-    wardrobe.remove_fit_from_favourites(request.form["friendly_name"])
-    wardrobe.save_clothes()
-    return f"Successfully removed favourite fit {request.form['friendly_name']} from wardrobe", 200
+    with Wardrobe.metadata_lock:
+        wardrobe = Wardrobe.load_clothes()
+        wardrobe.remove_fit_from_favourites(request_data["uuid"])
+        wardrobe.save_clothes()
+    return f"Successfully removed favourite fit {request_data['uuid']} from wardrobe", 200
 
 
-@app.route("/get_rating", mode=["POST"])
+@app.route("/get_rating", methods=["POST"])
 def get_rating():
-    if "friendly_names" not in request.form:
-        return jsonify({"error": "friendly_names identifier not found (required to get clothes for rating)"}), 400
+    request_data = request.get_json()
+    if "uuids" not in request_data:
+        return jsonify({"error": "uuids identifier not found (required to get clothes for rating)"}), 400
 
     wardrobe = Wardrobe.load_clothes()
 
     fit_clothing = []
-    for name in request.form["friendly_names"]:
-        fit_clothing.append(wardrobe.get_clothing_by_name(name))
+    for name in request_data["uuids"]:
+        fit_clothing.append(wardrobe.get_clothing_by_uuid(name))
 
     if len(fit_clothing) != 4:
         return jsonify({"error": f"Did not find exactly 4 pieces of clothing to rate (got {len(fit_clothing)}. {fit_clothing})"}), 400
@@ -135,13 +151,14 @@ def get_rating():
     return "Rating: 5", 200
 
 
-@app.route("/get_image", mode=["POST"])
+@app.route("/get_image", methods=["POST"])
 def get_image():
-    if "friendly_name" not in request.form:
-        return jsonify({"error": "friendly_name identifier not found (required to get image)"})
+    request_data = request.get_json()
+    if "uuid" not in request_data:
+        return jsonify({"error": "uuid identifier not found (required to get image)"})
 
     wardrobe = Wardrobe.load_clothes()
-    clothing = wardrobe.get_clothing_by_name(request.form["friendly_name"])[0]
+    clothing = wardrobe.get_clothing_by_uuid(request_data["uuid"])[0]
 
     # TODO see if this can load the image, if not, can always try base64 encoding
     with open(clothing.path, "rb") as f:

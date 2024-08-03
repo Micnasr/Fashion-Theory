@@ -3,8 +3,8 @@ import io
 import numpy as np
 from uuid import uuid4
 from PIL import Image
-from rembg import remove
-from sklearn.cluster import KMeans
+from rembg import remove  # type: ignore
+from sklearn.cluster import KMeans  # type: ignore
 from image_classes import RGBWithPercent
 
 
@@ -46,4 +46,4 @@ def get_dominant_colors_with_percentage(image_path: str, k: int = 3) -> list[RGB
 
     percentages = label_counts / total_count
 
-    return [(tuple(map(int, colors[i])), percentages[i]) for i in range(k)]
+    return [(tuple(map(int, colors[i])), percentages[i]) for i in range(k)]  # type: ignore
