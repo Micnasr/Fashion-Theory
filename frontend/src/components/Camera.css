@@ -45,6 +45,8 @@
   cursor: pointer;
   padding-left: 10px;
   padding-right: 10px;
+  font-family: 'Arimo', sans-serif;
+  font-weight: bold;
 }
 
 .camera-controls button:hover {
@@ -63,6 +65,8 @@
   cursor: pointer;
   padding-left: 10px;
   padding-right: 10px;
+  font-family: 'Arimo', sans-serif;
+  font-weight: bold;
 }
 
 img, video {
@@ -73,17 +77,32 @@ img, video {
 }
 
 .message {
-  font-size: 16px;
+  border: none;
+  font-size: 24px;
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
   text-align: center;
+  font-family: 'Arimo', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  text-align-last: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .message.error {
-  color: red;
+  color: #e55d5d;
+  background-color: #E0BBE4;
 }
 
 .message.success {
-  color: green;
+  background-color: #E0BBE4;
+  color: #FFFFFF;
 }
 
 .flash {
