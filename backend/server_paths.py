@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import os
+from pydantic import BaseModel
 
 from consts import CLOTHING_STORAGE_DIR, CLOTHING_METADATA_PATH, generate_random_path
 from image_classes import Wardrobe, ClothingInfo, ClothesPart
@@ -9,6 +10,10 @@ app = Flask(__name__)
 
 if not os.path.exists(CLOTHING_STORAGE_DIR):
     os.makedirs(CLOTHING_STORAGE_DIR)
+
+
+def pydantic_list_to_json(pydantic_objects: list[BaseModel]) -> list[dict]:
+    return list(map(lambda clothing: clothing.model_dump(), pydantic_objects))
 
 
 @app.route("/upload", methods=["POST"])
@@ -42,15 +47,26 @@ def upload_file():
 @app.route("/available_clothes")
 def get_available_clothes():
     wardrobe = Wardrobe.load_clothes()
-    return list(map(lambda clothing: clothing.model_dump(), wardrobe.available_clothes)), 200
+    return pydantic_list_to_json(wardrobe.available_clothes), 200
 
 
 @app.route("/fit")
 def get_fit():
     wardrobe = Wardrobe.load_clothes()
     # TODO fit algo here
-    # TODO take in colour here
-    # return wardrobe
+    # TODO take in colour here maybe
+    return pydantic_list_to_json(wardrobe.available_clothes[:4]), 200
+
+
+@app.route("/clear_wardrobe")
+def clear_wardrobe():
+    Wardrobe(available_clothes=[]).save_clothes()
+    return "Successfully cleared wardrobe", 200
+
+
+@app.route("/remove_clothing")
+def remove_clothing():
+    clothing_metadata = request.form
 
 
 # TODO api for:
