@@ -21,12 +21,15 @@ def remove_background(file_binary: bytes) -> bytes:
 
     # Calculate the bounding box of the non-transparent part of the image
     bbox = img.getbbox()
-    if bbox:
-        # Crop the image to the bounding box
-        img = img.crop(bbox)
+    if not bbox:
+        raise ValueError("No non-transparent pixels found in the image.")
 
-    # Determine the size of the new canvas
-    canvas_size = (max(img.width, img.height), max(img.width, img.height))
+    # Crop the image to the bounding box
+    img = img.crop(bbox)
+
+    # Calculate the new canvas size to ensure the image is centered
+    max_side = max(img.width, img.height)
+    canvas_size = (max_side, max_side)
     
     # Create a new blank canvas
     canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
