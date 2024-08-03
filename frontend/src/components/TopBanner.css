@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Pattaya&display=swap');
+
 .top-banner {
     background-color: #9B5DE5;
     color: white;
@@ -17,9 +19,9 @@
     margin: 0;
     margin-top: 4px;
     margin-left: 10px; /* Adds a small gap between the menu icon and the title */
-    font-family: 'Arial', sans-serif; /* Example font change */
+    font-family: 'Pattaya', sans-serif; /* Example font change */
     font-size: 24px; /* Example font size */
-    font-weight: bold; /* Example font weight */
+    font-weight: normal; /* Example font weight */
   }
   
   .menu-icon {
