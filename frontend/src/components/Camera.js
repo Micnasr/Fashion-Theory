@@ -100,7 +100,7 @@ const Camera = () => {
           {capturedImage && (
             <>
               <button onClick={resetPhoto}>✖ Discard photo</button>
-              <button onClick={handleSubmit}>📄 Submit!</button>
+              <button onClick={handleSubmit}>📄Submit!</button>
             </>
           )}
           <select

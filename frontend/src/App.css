@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Pattaya&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital@1&family=Pattaya&display=swap');
+
+
 .app {
   display: flex;
   flex-direction: column;
@@ -20,3 +24,36 @@
     margin-left: 0;
   }
 }
+
+.unauthorized {
+  background-color: #9B5DE5; /* Purple background color */
+  color: white; /* Ensure text is readable on purple background */
+  height: 100vh; /* Ensure it covers the full height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-left: -20px;
+  font-family: 'Pattaya', sans-serif;
+}
+.unauthorized h1 {
+  font-weight: normal;
+}
+
+.login-button {
+    background-color: #E0BBE4;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Arimo', sans-serif;
+    transition: background-color 0.3s ease;
+    margin-left: 15px;
+    margin-right: 15px; /* Adds space between the logout button and the profile icon */
+  }
+  
+  .login-button:hover {
+    background-color: #E9CFEC;
+  }

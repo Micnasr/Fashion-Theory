@@ -47,10 +47,12 @@
   padding-right: 10px;
   font-family: 'Arimo', sans-serif;
   font-weight: bold;
+  transition: transform 0.1s ease;;
 }
 
 .camera-controls button:hover {
   background-color: #9B5DE5;
+  transform: scale(1.1); /* Scale up slightly on hover */
 }
 
 .dropdown {
@@ -67,6 +69,11 @@
   padding-right: 10px;
   font-family: 'Arimo', sans-serif;
   font-weight: bold;
+  transition: transform 0.1s ease;;
+}
+
+.dropdown:hover {
+  transform: scale(1.1); /* Scale up slightly on hover */
 }
 
 img, video {
