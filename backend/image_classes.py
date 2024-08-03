@@ -36,7 +36,7 @@ class Fit(BaseModel):
 
 class Wardrobe(BaseModel):
     available_clothes: list[ClothingInfo]
-    current_fit: Fit | None = None
+    # current_fit: Fit | None = None # shouldnt need to record this - frontend should get all info needed for current fit on the fly
     favourite_fits: list[Fit] = Field(default_factory=lambda: [])
 
     def get_gear(self, clothes_part: ClothesPart) -> list[ClothingInfo]:
@@ -46,7 +46,7 @@ class Wardrobe(BaseModel):
         return list(filter(lambda clothing: clothing.friendly_name == friendly_name, self.available_clothes))
 
     def remove_clothing_from_wardrobe(self, friendly_name: str) -> None:
-        """Remove clothes matching friendly_name from wardrobe object. Does not affect the metadata (call save_clothes to make changes permanent)"""
+        """Remove clothes matching friendly_name from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
         self.available_clothes = list(filter(lambda clothing: clothing.friendly_name != friendly_name, self.available_clothes))
 
         for fit in self.favourite_fits:
@@ -54,6 +54,10 @@ class Wardrobe(BaseModel):
                 if clothing.friendly_name == friendly_name:
                     self.favourite_fits.remove(fit)
                     break
+
+    def remove_fit_from_favourites(self, friendly_name: str) -> None:
+        """Remove fit matching friendly_name from wardrobe object. Does not affect the metadata json (call save_clothes to make changes permanent)"""
+        self.favourite_fits = list(filter(lambda fit: fit.friendly_name != friendly_name, self.favourite_fits))
 
     def save_clothes(self) -> None:
         """Overwrite metadata json with clothes stored in the current object"""
