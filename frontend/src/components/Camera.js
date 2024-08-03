@@ -11,6 +11,7 @@ const Camera = () => {
   const [message, setMessage] = useState('');
   const [flash, setFlash] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Added state for loading
 
   const capturePhoto = () => {
     // Trigger flash effect
@@ -40,22 +41,25 @@ const Camera = () => {
     setCapturedImage(null);
     setFile(null);
     setMessage('');
-    setIsError(false); // Reset the error state
+    setIsError(false);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) {
       setMessage('Please capture a photo first!');
-      setIsError(true); // Set error state
+      setIsError(true);
       return;
     }
 
     if (!clothingCategory) {
       setMessage('Please choose a category before submitting');
-      setIsError(true); // Set error state
+      setIsError(true); 
       return;
     }
+
+    // Set loading state
+    setIsLoading(true);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -71,15 +75,20 @@ const Camera = () => {
 
       if (response.ok) {
         setMessage('Successfully uploaded');
-        setIsError(false); // Set success state
+        setIsError(false);
+        // Reset view to take another picture
+        resetPhoto(); 
       } else {
         setMessage('Failed to upload: ' + (result.error || 'Unknown error'));
-        setIsError(true); // Set error state
+        setIsError(true);
       }
     } catch (error) {
       setMessage('Failed to upload: ' + error.message);
-      setIsError(true); // Set error state
+      setIsError(true);
     }
+
+    // Reset loading state
+    setIsLoading(false);
   };
 
   return (
@@ -110,7 +119,11 @@ const Camera = () => {
             <option value="shoes">Shoes</option>
           </select>
         </div>
-        {message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>}
+        {isLoading ? (
+          <div className="loading-spinner"></div>
+        ) : (
+          message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>
+        )}
         <div className="camera-display">
           {capturedImage ? (
             <img src={capturedImage} alt="Captured" />
