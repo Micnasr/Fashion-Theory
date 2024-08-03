@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Wardrobe.css';
+import WardrobeItem from './WardrobeItem';
 
 const Wardrobe = () => {
   const [selectedCategory, setSelectedCategory] = useState('Tops');
@@ -27,7 +28,7 @@ const Wardrobe = () => {
         data.forEach(item => {
           switch (item.clothes_part) {
             case 'top':
-              clothesByCategory.Hats.push(item);
+              clothesByCategory.Tops.push(item);
               break;
             case 'upper_body':
               clothesByCategory.Tops.push(item);
@@ -52,6 +53,16 @@ const Wardrobe = () => {
     fetchClothes();
   }, []);
 
+  const handleRemove = (uuid) => {
+    setClothes((prevClothes) => {
+      const updatedClothes = { ...prevClothes };
+      Object.keys(updatedClothes).forEach(category => {
+        updatedClothes[category] = updatedClothes[category].filter(item => item.uuid !== uuid);
+      });
+      return updatedClothes;
+    });
+  };
+
   return (
     <div className="wardrobe-container">
       <div className="wardrobe-sidebar">
@@ -68,46 +79,10 @@ const Wardrobe = () => {
       <div className="wardrobe-display">
         <div className="wardrobe-items">
           {clothes[selectedCategory]?.map((item, index) => (
-            <WardrobeItem key={item.uuid} uuid={item.uuid} index={index} />
+            <WardrobeItem key={item.uuid} uuid={item.uuid} index={index} onRemove={handleRemove} />
           ))}
         </div>
       </div>
-    </div>
-  );
-};
-
-const WardrobeItem = ({ uuid, index }) => {
-  const [imageSrc, setImageSrc] = useState('');
-
-  useEffect(() => {
-    // Fetch the image data for each item
-    const fetchImage = async () => {
-      try {
-        const response = await fetch('/get_image', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ uuid }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const result = await response.json();
-        setImageSrc(`data:image/png;base64,${result.image}`); // Using base64 encoded image string
-      } catch (error) {
-        console.error('Error fetching image:', error);
-      }
-    };
-
-    fetchImage();
-  }, [uuid]);
-
-  return (
-    <div className="wardrobe-item">
-      {imageSrc ? <img src={imageSrc} alt={`Item ${index + 1}`} /> : <p>Loading...</p>}
     </div>
   );
 };
