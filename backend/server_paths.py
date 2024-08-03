@@ -98,10 +98,17 @@ def remove_clothing():
     if "uuid" not in request_data:
         return jsonify({"error": "uuid identifier not found (required to remove clothing)"}), 400
 
+    
     with Wardrobe.metadata_lock:
         wardrobe = Wardrobe.load_clothes()
-        wardrobe.remove_clothing_from_wardrobe(request_data["uuid"])
+        clothing_to_remove = wardrobe.get_clothing_by_uuid(request_data["uuid"])
+        wardrobe.remove_clothing_from_wardrobe(clothing_to_remove.uuid)
         wardrobe.save_clothes()
+
+        # Delete the file from the filesystem
+        if os.path.exists(clothing_to_remove.path):
+            os.remove(clothing_to_remove.path)
+
 
     return f"Successfully removed {request_data['uuid']} from wardrobe", 200
 

@@ -5,10 +5,14 @@ import WardrobeItem from './WardrobeItem';
 const Wardrobe = () => {
   const [selectedCategory, setSelectedCategory] = useState('Tops');
   const [clothes, setClothes] = useState({});
-  const categories = ['Hats', 'Tops', 'Bottoms', 'Shoes'];
+  const categories = [
+    { name: 'Hats', icon: '/images/hats.png' },
+    { name: 'Tops', icon: '/images/outfit.png' },
+    { name: 'Bottoms', icon: '/images/bottoms.png' },
+    { name: 'Shoes', icon: '/images/shoes.png' },
+  ];
 
   useEffect(() => {
-    // Fetch available clothes on component mount
     const fetchClothes = async () => {
       try {
         const response = await fetch('/get_available_clothes');
@@ -28,7 +32,7 @@ const Wardrobe = () => {
         data.forEach(item => {
           switch (item.clothes_part) {
             case 'top':
-              clothesByCategory.Tops.push(item);
+              clothesByCategory.Hats.push(item);
               break;
             case 'upper_body':
               clothesByCategory.Tops.push(item);
@@ -68,11 +72,12 @@ const Wardrobe = () => {
       <div className="wardrobe-sidebar">
         {categories.map((category) => (
           <button
-            key={category}
-            className={selectedCategory === category ? 'active' : ''}
-            onClick={() => setSelectedCategory(category)}
+            key={category.name}
+            className={selectedCategory === category.name ? 'active' : ''}
+            onClick={() => setSelectedCategory(category.name)}
           >
-            {category}
+            <img src={category.icon} alt={category.name} className="sidebar-icon" />
+            {category.name}
           </button>
         ))}
       </div>
