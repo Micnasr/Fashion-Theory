@@ -49,6 +49,20 @@
   background-color: #9B5DE5;
 }
 
+.dropdown {
+  width: 180px; /* Increased width */
+  height: 80px;
+  background-color: #FFFFFF; /* White background */
+  border: 1px solid #DADADA; /* Border to match the design */
+  border-radius: 10px;
+  font-size: 18px;
+  color: #333; /* Darker text color */
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
 img, video {
   width: 100%;
   height: 100%;

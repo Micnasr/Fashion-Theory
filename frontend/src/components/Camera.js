@@ -113,10 +113,10 @@ const Camera = () => {
             }}
           >
             <option value="" disabled>Select Category</option>
-            <option value="hat">Hat</option>
-            <option value="top">Top</option>
-            <option value="bottom">Bottom</option>
-            <option value="shoes">Shoes</option>
+            <option value="top">Hat</option>
+            <option value="upper_body">Upper Body</option>
+            <option value="lower_body">Lower Body</option>
+            <option value="bottom">Shoes</option>
           </select>
         </div>
         {isLoading ? (

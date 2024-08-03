@@ -33,6 +33,11 @@ def upload_file():
 
     if not file:
         return jsonify({"error": f"File appears as None: {file}"}), 400
+    
+    if "category" not in request.form:
+        return jsonify({"error": "No category part"}), 400
+
+    category = request.form["category"]
 
     file_binary = file.read()
     output_image_bytes = remove_background(file_binary)
@@ -47,7 +52,7 @@ def upload_file():
     rgbs_with_percent = get_dominant_colors_with_percentage(file_path)
 
     # TODO get clothes part from drop down menu
-    clothing = ClothingInfo(path=file_path, rgbs=rgbs_with_percent, clothes_part=ClothesPart.top)
+    clothing = ClothingInfo(path=file_path, rgbs=rgbs_with_percent, clothes_part=category)
 
     wardrobe = Wardrobe.load_clothes()
     wardrobe.available_clothes.append(clothing)
