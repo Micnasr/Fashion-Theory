@@ -10,6 +10,7 @@ const Camera = () => {
   const [clothingCategory, setClothingCategory] = useState('');
   const [message, setMessage] = useState('');
   const [flash, setFlash] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const capturePhoto = () => {
     // Trigger flash effect
@@ -39,17 +40,20 @@ const Camera = () => {
     setCapturedImage(null);
     setFile(null);
     setMessage('');
+    setIsError(false); // Reset the error state
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) {
       setMessage('Please capture a photo first!');
+      setIsError(true); // Set error state
       return;
     }
 
     if (!clothingCategory) {
       setMessage('Please choose a category before submitting');
+      setIsError(true); // Set error state
       return;
     }
 
@@ -67,11 +71,14 @@ const Camera = () => {
 
       if (response.ok) {
         setMessage('Successfully uploaded');
+        setIsError(false); // Set success state
       } else {
         setMessage('Failed to upload: ' + (result.error || 'Unknown error'));
+        setIsError(true); // Set error state
       }
     } catch (error) {
       setMessage('Failed to upload: ' + error.message);
+      setIsError(true); // Set error state
     }
   };
 
@@ -93,6 +100,7 @@ const Camera = () => {
             onChange={(e) => {
               setClothingCategory(e.target.value);
               setMessage('');
+              setIsError(false); // Reset the error state
             }}
           >
             <option value="" disabled>Select Category</option>
@@ -102,7 +110,7 @@ const Camera = () => {
             <option value="shoes">Shoes</option>
           </select>
         </div>
-        {message && <div className="message">{message}</div>}
+        {message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>}
         <div className="camera-display">
           {capturedImage ? (
             <img src={capturedImage} alt="Captured" />
