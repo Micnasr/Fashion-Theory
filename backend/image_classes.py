@@ -66,7 +66,7 @@ class Wardrobe(BaseModel):
         if not os.path.exists(CLOTHING_METADATA_PATH):
             return Wardrobe(available_clothes=[])
 
-        with open(CLOTHING_METADATA_PATH, "a") as f:
+        with open(CLOTHING_METADATA_PATH, "r") as f:
             clothing_metadata = json.load(f)
 
         return Wardrobe(**clothing_metadata)
