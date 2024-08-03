@@ -9,10 +9,10 @@ const Outfit = () => {
     Shoes: 0,
   });
   const [clothes, setClothes] = useState({
-    Hats: [],
-    Tops: [],
-    Bottoms: [],
-    Shoes: [],
+    Hats: [{ image: '/images/default-image.png' }],
+    Tops: [{ image: '/images/default-image.png' }],
+    Bottoms: [{ image: '/images/default-image.png' }],
+    Shoes: [{ image: '/images/default-image.png' }],
   });
 
   useEffect(() => {
@@ -25,27 +25,26 @@ const Outfit = () => {
         const data = await response.json();
 
         const clothesByCategory = {
-          Hats: [],
-          Tops: [],
-          Bottoms: [],
-          Shoes: []
+          Hats: [{ image: '/images/default-image.png' }],
+          Tops: [{ image: '/images/default-image.png' }],
+          Bottoms: [{ image: '/images/default-image.png' }],
+          Shoes: [{ image: '/images/default-image.png' }],
         };
 
-        // Populate the clothesByCategory dictionary with default images
         data.forEach(item => {
-          const defaultItem = { ...item, image: '/images/default-image.png' };
+          const clothingItem = { ...item, image: '/images/default-image.png' };
           switch (item.clothes_part) {
             case 'top':
-              clothesByCategory.Hats.push(defaultItem);
+              clothesByCategory.Hats.push(clothingItem);
               break;
             case 'upper_body':
-              clothesByCategory.Tops.push(defaultItem);
+              clothesByCategory.Tops.push(clothingItem);
               break;
             case 'lower_body':
-              clothesByCategory.Bottoms.push(defaultItem);
+              clothesByCategory.Bottoms.push(clothingItem);
               break;
             case 'bottom':
-              clothesByCategory.Shoes.push(defaultItem);
+              clothesByCategory.Shoes.push(clothingItem);
               break;
             default:
               break;
@@ -92,14 +91,15 @@ const Outfit = () => {
   const handleArrowClick = async (category, direction) => {
     const items = clothes[category];
 
-    if (items && items.length > 0) {
-      setOutfitIndex((prevIndex) => {
-        const currentIndex = prevIndex[category];
-        const newIndex = (currentIndex + direction + items.length) % items.length;
-        return { ...prevIndex, [category]: newIndex };
-      });
+    if (items && items.length > 1) { // Ensure there is more than the default image
+      const currentIndex = outfitIndex[category];
+      const newIndex = (currentIndex + direction + items.length) % items.length;
 
-      const newIndex = (outfitIndex[category] + direction + items.length) % items.length;
+      setOutfitIndex((prevIndex) => ({
+        ...prevIndex,
+        [category]: newIndex,
+      }));
+
       const currentItem = items[newIndex];
 
       if (currentItem && currentItem.image === '/images/default-image.png') {
@@ -128,12 +128,12 @@ const Outfit = () => {
       Shoes: 0,
     });
 
-    setClothes((prevClothes) => ({
-      Hats: prevClothes.Hats.map(item => ({ ...item, image: '/images/default-image.png' })),
-      Tops: prevClothes.Tops.map(item => ({ ...item, image: '/images/default-image.png' })),
-      Bottoms: prevClothes.Bottoms.map(item => ({ ...item, image: '/images/default-image.png' })),
-      Shoes: prevClothes.Shoes.map(item => ({ ...item, image: '/images/default-image.png' })),
-    }));
+    setClothes({
+      Hats: [{ image: '/images/default-image.png' }],
+      Tops: [{ image: '/images/default-image.png' }],
+      Bottoms: [{ image: '/images/default-image.png' }],
+      Shoes: [{ image: '/images/default-image.png' }],
+    });
   };
 
   return (
@@ -153,23 +153,17 @@ const Outfit = () => {
 
             return (
               <div className={`carousel-item ${sizeClass}`} key={category}>
-                {items.length > 0 ? (
-                  <>
-                    <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
-                      <img src="/images/left-arrow.png" alt="Previous" />
-                    </button>
-                    <img 
-                      src={items[currentIndex].image} 
-                      alt={`${category} ${currentIndex + 1}`}
-                      className="clothing-image"
-                    />
-                    <button className="arrow-btn right-arrow" onClick={() => handleArrowClick(category, 1)}>
-                      <img src="/images/right-arrow.png" alt="Next" />
-                    </button>
-                  </>
-                ) : (
-                  <p>No items available for {category}</p>
-                )}
+                <button className="arrow-btn left-arrow" onClick={() => handleArrowClick(category, -1)}>
+                  <img src="/images/left-arrow.png" alt="Previous" />
+                </button>
+                <img 
+                  src={items[currentIndex]?.image || '/images/default-image.png'} 
+                  alt={`${category} ${currentIndex + 1}`}
+                  className="clothing-image"
+                />
+                <button className="arrow-btn right-arrow" onClick={() => handleArrowClick(category, 1)}>
+                  <img src="/images/right-arrow.png" alt="Next" />
+                </button>
               </div>
             );
           })}
