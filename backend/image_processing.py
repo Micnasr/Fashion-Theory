@@ -21,12 +21,15 @@ def remove_background(file_binary: bytes) -> bytes:
 
     # Calculate the bounding box of the non-transparent part of the image
     bbox = img.getbbox()
-    if bbox:
-        # Crop the image to the bounding box
-        img = img.crop(bbox)
+    if not bbox:
+        raise ValueError("No non-transparent pixels found in the image.")
 
-    # Determine the size of the new canvas
-    canvas_size = (max(img.width, img.height), max(img.width, img.height))
+    # Crop the image to the bounding box
+    img = img.crop(bbox)
+
+    # Calculate the new canvas size to ensure the image is centered
+    max_side = max(img.width, img.height)
+    canvas_size = (max_side, max_side)
     
     # Create a new blank canvas
     canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
@@ -90,6 +93,9 @@ def calculate_complementarity_score(fit: Fit) -> float:
     """Calculate how well the colors complement each other in the list of outfits."""
     total_complementarity = 0.0
     total_weight = 0.0
+
+    if len(fit.clothes) == 1:
+        return 50
 
     # Compare each clothing element with each other
     for i, clothing1 in enumerate(fit.clothes):

@@ -35,7 +35,7 @@ def upload_file():
 
     if not file:
         return jsonify({"error": f"File appears as None: {file}"}), 400
-    
+
     if "category" not in request.form:
         return jsonify({"error": "No category part"}), 400
 
@@ -98,7 +98,6 @@ def remove_clothing():
     if "uuid" not in request_data:
         return jsonify({"error": "uuid identifier not found (required to remove clothing)"}), 400
 
-    
     with Wardrobe.metadata_lock:
         wardrobe = Wardrobe.load_clothes()
         clothing_to_remove = wardrobe.get_clothing_by_uuid(request_data["uuid"])
@@ -108,7 +107,6 @@ def remove_clothing():
         # Delete the file from the filesystem
         if os.path.exists(clothing_to_remove.path):
             os.remove(clothing_to_remove.path)
-
 
     return f"Successfully removed {request_data['uuid']} from wardrobe", 200
 
@@ -150,7 +148,7 @@ def get_rating():
     request_data = request.get_json()
     if "uuids" not in request_data:
         return jsonify({"error": "uuids identifier not found (required to get clothes for rating)"}), 400
-    
+
     if len(request_data["uuids"]) == 0:
         return
 
@@ -171,7 +169,7 @@ def get_rating():
 def get_image():
     request_data = request.get_json()
     if "uuid" not in request_data:
-        return jsonify({"error": "uuid identifier not found (required to get image)"}), 400
+        return jsonify({"error": f"uuid identifier not found (required to get image - got {request_data})"}), 400
 
     wardrobe = Wardrobe.load_clothes()
     try:

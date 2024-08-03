@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './WardrobeItem.css';
+import Modal from './Modal'; // Import the modal component
 
 const WardrobeItem = ({ uuid, index, onRemove }) => {
   const [imageSrc, setImageSrc] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
   useEffect(() => {
-    // Fetch the image data for each item
     const fetchImage = async () => {
       try {
         const response = await fetch('/get_image', {
@@ -50,11 +51,24 @@ const WardrobeItem = ({ uuid, index, onRemove }) => {
     }
   };
 
+  const handleImageClick = () => {
+    setIsModalVisible(true); // Show modal on image click
+  };
+
   return (
-    <div className="wardrobe-item">
-      <button className="remove-button" onClick={handleRemove}>✖</button>
-      {imageSrc ? <img src={imageSrc} alt={`Item ${index + 1}`} /> : <p>Loading...</p>}
-    </div>
+    <>
+      <div className="wardrobe-item">
+        <button className="remove-button" onClick={handleRemove}>✖</button>
+        {imageSrc ? (
+          <img src={imageSrc} alt={`Item ${index + 1}`} onClick={handleImageClick} />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+      <Modal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)}>
+        <img src={imageSrc} alt={`Item ${index + 1}`} className="full-size-image" />
+      </Modal>
+    </>
   );
 };
 
