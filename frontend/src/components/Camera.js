@@ -54,7 +54,7 @@ const Camera = () => {
 
     if (!clothingCategory) {
       setMessage('Please choose a category before submitting');
-      setIsError(true); 
+      setIsError(true);
       return;
     }
 
@@ -77,7 +77,7 @@ const Camera = () => {
         setMessage('Successfully uploaded');
         setIsError(false);
         // Reset view to take another picture
-        resetPhoto(); 
+        resetPhoto();
       } else {
         setMessage('Failed to upload: ' + (result.error || 'Unknown error'));
         setIsError(true);
@@ -96,11 +96,11 @@ const Camera = () => {
       <div className="camera-content">
         <div className={`flash ${flash ? 'active' : ''}`}></div>
         <div className="camera-controls">
-          {!capturedImage && <button onClick={capturePhoto}>+</button>}
+          {!capturedImage && <button onClick={capturePhoto}><img src="/images/camera.png" alt="Camera" className="camera-icon" /> Take photo</button>}
           {capturedImage && (
             <>
-              <button onClick={resetPhoto}>✖</button>
-              <button onClick={handleSubmit}>📄</button>
+              <button onClick={resetPhoto}>✖ Discard photo</button>
+              <button onClick={handleSubmit}>📄 Submit!</button>
             </>
           )}
           <select
@@ -120,7 +120,9 @@ const Camera = () => {
           </select>
         </div>
         {isLoading ? (
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner-parent">
+            <div className="loading-spinner"></div>
+          </div>
         ) : (
           message && <div className={`message ${isError ? 'error' : 'success'}`}>{message}</div>
         )}
