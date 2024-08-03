@@ -182,8 +182,34 @@ const Outfit = () => {
     console.log("Generate outfit of the day function triggered");
   };
 
-  const favouriteOutfit = () => {
-    console.log("Save outfit function triggered");
+  const favouriteOutfit = async () => {
+    const currentUuids = {
+      Hats: clothes.Hats[outfitIndex.Hats]?.uuid,
+      Tops: clothes.Tops[outfitIndex.Tops]?.uuid,
+      Bottoms: clothes.Bottoms[outfitIndex.Bottoms]?.uuid,
+      Shoes: clothes.Shoes[outfitIndex.Shoes]?.uuid,
+    };
+  
+    const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
+  
+    if (filteredUuids.length > 0) {
+      try {
+        const response = await fetch('/save_fav_fit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ uuids: filteredUuids }),
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.text(); // Parse the response as text
+        console.log('Favourite outfit saved:', result);
+      } catch (error) {
+        console.error('Error saving favourite outfit:', error);
+      }
+    }
   };
 
   const resetOutfit = () => {
