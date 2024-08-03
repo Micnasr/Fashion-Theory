@@ -7,9 +7,7 @@ import Outfit from './components/Outfit';
 import Favourites from './components/Favourites';
 import TopBanner from './components/TopBanner';
 import './App.css';
-import LoginButton from './components/loginButton';
-import LogoutButton from './components/logoutButton';
-import UserProfile from './components/userProfile';
+import LoginButton from './components/LoginButton';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const App = () => {
@@ -23,12 +21,11 @@ const App = () => {
   return (
     <Router>
       <div className="app">
-        <TopBanner onMenuClick={toggleSidebar} />
+        <TopBanner onMenuClick={isAuthenticated ? toggleSidebar : null} isAuthenticated={isAuthenticated} />
 
-        {isAuthenticated && <Sidebar isVisible={isSidebarVisible} />} 
+        {isAuthenticated && <Sidebar isVisible={isSidebarVisible} />}
 
-        <Sidebar isVisible={isSidebarVisible} />
-        <div className={`main-content ${isSidebarVisible ? 'with-sidebar' : ''}`}>
+        <div className={`main-content ${isSidebarVisible && isAuthenticated ? 'with-sidebar' : ''}`}>
           {!isAuthenticated ? (
             <div className="unauthorized">
               <h1>Welcome to Fashion Theory</h1>

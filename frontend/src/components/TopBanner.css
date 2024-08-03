@@ -36,6 +36,9 @@
   .profile-section {
     display: flex;
     align-items: center;
+    position: absolute; /* Position the element relative to its nearest positioned ancestor */
+    top: 10px; /* Adjust this value to position the element further from the top */
+    right: 50px; /* Adjust this value to position the element further from the right */
   }
   
   .logout-button {
@@ -48,8 +51,8 @@
     font-size: 14px;
     font-family: 'Arimo', sans-serif;
     transition: background-color 0.3s ease;
-    margin-left: 920px;
     margin-right: 10px; /* Adds space between the logout button and the profile icon */
+    margin-top: -5px;
   }
   
   .logout-button:hover {

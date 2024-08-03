@@ -1,14 +1,25 @@
 import React from 'react';
 import './TopBanner.css';
 import { useAuth0 } from '@auth0/auth0-react';
-import LogoutButton from './logoutButton';
+
+function LogoutButton() {
+  const { logout } = useAuth0();
+
+  return (
+      <button className="logout-button" onClick={() => logout({ returnTo: window.location.origin })}>
+          Log out
+      </button>
+  );
+}
 
 const TopBanner = ({ onMenuClick }) => {
   const { user, isAuthenticated } = useAuth0();
 
   return (
     <div className="top-banner">
-      <button className="menu-icon" onClick={onMenuClick}>☰</button>
+      {isAuthenticated && (
+        <button className="menu-icon" onClick={onMenuClick}>☰</button>
+      )}
       <h2>Fashion Theory</h2>
       {isAuthenticated && (
         <div className="profile-section">
