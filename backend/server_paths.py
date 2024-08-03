@@ -1,6 +1,7 @@
 import os
 import io
 import shutil
+import base64
 
 from flask import Flask, request, jsonify
 from pydantic import BaseModel
@@ -160,14 +161,19 @@ def get_rating():
 def get_image():
     request_data = request.get_json()
     if "uuid" not in request_data:
-        return jsonify({"error": "uuid identifier not found (required to get image)"})
+        return jsonify({"error": "uuid identifier not found (required to get image)"}), 400
 
     wardrobe = Wardrobe.load_clothes()
-    clothing = wardrobe.get_clothing_by_uuid(request_data["uuid"])[0]
+    try:
+        clothing = wardrobe.get_clothing_by_uuid(request_data["uuid"])
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
 
-    # TODO see if this can load the image, if not, can always try base64 encoding
+    # Load the image and return it as a base64 encoded string
     with open(clothing.path, "rb") as f:
-        return f.read(), 200
+        image_data = base64.b64encode(f.read()).decode("utf-8")
+
+    return jsonify({"image": image_data}), 200
 
 
 # TODO api for:
