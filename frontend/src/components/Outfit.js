@@ -36,7 +36,7 @@ const Outfit = () => {
         data.forEach(item => {
           const clothingItem = { ...item, image: '/images/default-image.png' };
           switch (item.clothes_part) {
-            case 'hat':
+            case 'top':
               clothesByCategory.Hats.push(clothingItem);
               break;
             case 'upper_body':
