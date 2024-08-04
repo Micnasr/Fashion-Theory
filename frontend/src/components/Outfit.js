@@ -16,8 +16,8 @@ const Outfit = () => {
     Shoes: [{ image: '/images/default-image.png' }],
   });
   const [fitCheckValue, setFitCheckValue] = useState(0);
-  const [hasRandomized, setHasRandomized] = useState(false); 
-  const [showFavoriteButton, setShowFavoriteButton] = useState(true); 
+  const [hasRandomized, setHasRandomized] = useState(false);
+  const [showFavoriteButton, setShowFavoriteButton] = useState(true);
 
   useEffect(() => {
     const fetchClothes = async () => {
@@ -67,7 +67,7 @@ const Outfit = () => {
   useEffect(() => {
     if (!hasRandomized && (clothes.Hats.length > 1 || clothes.Tops.length > 1 || clothes.Bottoms.length > 1 || clothes.Shoes.length > 1)) {
       randomizeOutfit(clothes);
-      setHasRandomized(true); 
+      setHasRandomized(true);
     }
   }, [clothes, hasRandomized]);
 
@@ -160,7 +160,6 @@ const Outfit = () => {
 
     setOutfitIndex(newOutfitIndex);
 
-    // Fetch images if the random item hasn't been loaded yet
     Object.keys(newOutfitIndex).forEach(async (category) => {
       const newIndex = newOutfitIndex[category];
       const currentItem = clothesByCategory[category][newIndex];
@@ -181,8 +180,58 @@ const Outfit = () => {
     setShowFavoriteButton(true);
   };
 
-  const generateOutfitOfTheDay = () => {
-    console.log("Generate outfit of the day function triggered");
+  const generateOutfitOfTheDay = async () => {
+    try {
+      const response = await fetch('/get_optimal_fit', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      const { uuids } = result;
+
+      const newOutfitIndex = {
+        Hats: 0,
+        Tops: 0,
+        Bottoms: 0,
+        Shoes: 0,
+      };
+
+          // Create a map of UUIDs to their categories and indices
+    const uuidMap = {};
+    for (let category in clothes) {
+      for (let i = 0; i < clothes[category].length; i++) {
+        uuidMap[clothes[category][i].uuid] = { category, index: i };
+      }
+    }
+
+    // Set the correct indices in newOutfitIndex based on the UUIDs returned from the backend
+    uuids.forEach(uuid => {
+      if (uuidMap[uuid]) {
+        const { category, index } = uuidMap[uuid];
+        newOutfitIndex[category] = index;
+      }
+    });
+
+    // Update the state with the new indices
+    setOutfitIndex(newOutfitIndex);
+
+    // Fetch images for the new items and update the state
+    await Promise.all(uuids.map(async (uuid) => {
+      const { category, index } = uuidMap[uuid];
+      await fetchImage(uuid, category, index);
+    }));
+
+      await fetchRating(uuids);
+    } catch (error) {
+      console.error('Error generating outfit of the day:', error);
+    }
   };
 
   const favouriteOutfit = async () => {
@@ -192,9 +241,9 @@ const Outfit = () => {
       Bottoms: clothes.Bottoms[outfitIndex.Bottoms]?.uuid,
       Shoes: clothes.Shoes[outfitIndex.Shoes]?.uuid,
     };
-  
+
     const filteredUuids = Object.values(currentUuids).filter(uuid => uuid);
-  
+
     if (filteredUuids.length > 0) {
       try {
         const response = await fetch('/save_fav_fit', {
@@ -207,7 +256,7 @@ const Outfit = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const result = await response.text(); 
+        const result = await response.text();
         console.log('Favourite outfit saved:', result);
         setShowFavoriteButton(false);
       } catch (error) {
