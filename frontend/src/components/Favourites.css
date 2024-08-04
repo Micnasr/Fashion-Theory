@@ -10,24 +10,24 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: flex-start; /* Start items from the left */
+  justify-content: flex-start;
   width: 100%;
 }
 
 .favourites-item {
-  width: 200px; /* Adjust width as needed */
+  width: 200px;
   background-color: #DADADA;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  position: relative; /* Needed for the remove button */
+  position: relative;
   padding: 10px;
 }
 
 .clothing-items {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Space between clothing items */
+  gap: 10px;
 }
 
 .favourites-item img {

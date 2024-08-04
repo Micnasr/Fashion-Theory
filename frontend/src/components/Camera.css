@@ -35,7 +35,6 @@
 }
 
 .camera-controls button {
-  /* width: 80px; */
   height: 60px;
   background-color: #E0BBE4;
   border: none;
@@ -47,18 +46,19 @@
   padding-right: 10px;
   font-family: 'Arimo', sans-serif;
   font-weight: bold;
-  transition: transform 0.1s ease;;
+  transition: transform 0.1s ease;
+  ;
   margin-left: -10px;
 }
 
 .camera-controls button:hover {
   background-color: #9B5DE5;
-  transform: scale(1.1); /* Scale up slightly on hover */
+  transform: scale(1.1);
 }
 
 .dropdown {
   height: 40px;
-  background-color: #E0BBE4; /* White background */
+  background-color: #E0BBE4;
   color: #FFFFFF;
   border: none;
   border-radius: 10px;
@@ -70,18 +70,20 @@
   padding-right: 10px;
   font-family: 'Arimo', sans-serif;
   font-weight: bold;
-  transition: transform 0.1s ease;;
+  transition: transform 0.1s ease;
+  ;
 }
 
 .dropdown:hover {
-  transform: scale(1.1); /* Scale up slightly on hover */
+  transform: scale(1.1);
 }
 
-img, video {
+img,
+video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;  /* Match the parent border-radius */
+  border-radius: 10px;
 }
 
 .message {
@@ -141,11 +143,11 @@ img, video {
   height: 100%;
   background: rgba(255, 255, 255, 0.5);
   z-index: 1;
-} 
+}
 
 .loading-spinner {
-  border: 20px solid #f3f3f3; /* Light grey */
-  border-top: 20px solid #9B5DE5; /* Blue */
+  border: 20px solid #f3f3f3;
+  border-top: 20px solid #9B5DE5;
   border-radius: 50%;
   width: 100px;
   height: 100px;
@@ -156,14 +158,18 @@ img, video {
 
 .camera-icon {
   width: 30px;
-  height: 30px; /* Set the height to 24px */
-  vertical-align: middle; /* Aligns the icon with the text */
+  height: 30px;
+  vertical-align: middle;
   padding-bottom: 2px;
   color: #FFFFFF;
-  /* object-fit: contain; Ensures the image scales correctly without distortion */
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

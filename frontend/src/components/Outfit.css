@@ -37,7 +37,6 @@
   position: relative;
 }
 
-/* Set sizes for each clothing type */
 .hat-size {
   width: 150px;
   height: 150px;
@@ -66,16 +65,12 @@
   top: 50%;
   transform: translateY(-50%);
   width: 40px;
-  /* Fixed width */
   height: 40px;
-  /* Fixed height */
   transition: transform 0.2s ease;
-  /* Smooth scaling transition */
 }
 
 .arrow-btn:hover {
   transform: translateY(-50%) scale(1.2);
-  /* Scale up slightly on hover */
 }
 
 .clothing-image {
@@ -109,7 +104,6 @@
 .outfit-controls button:hover {
   background-color: #9B5DE5;
   transform: scale(1.1);
-  /* Scale up slightly on hover */
 }
 
 .outfit-icon {
@@ -139,9 +133,9 @@
   justify-content: center;
   justify-self: center;
   background-color: #f3f3f3;
-  font-family: 'Arimo', sans-serif; /* Example font change */
-  font-size: 30px; /* Example font size */
-  font-weight: bold; /* Example font weight */
+  font-family: 'Arimo', sans-serif;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 .fit-check-text-container {

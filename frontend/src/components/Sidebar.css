@@ -3,18 +3,18 @@
 .sidebar {
   background-color: #E0BBE4;
   position: fixed;
-  top: 50px; /* Adjust this to match the height of your top banner */
-  left: -300px; /* Sidebar width (250px) minus 10px */
+  top: 50px;
+  left: -300px;
   width: 200px;
-  height: 100vh; /* Adjust for banner height */
-  transform: translateX(10px); /* Start 10px to the left of the screen */
-  transition: transform 0.3s ease, left 0.3s ease; /* Smooth transition for both properties */
+  height: 100vh;
+  transform: translateX(10px);
+  transition: transform 0.3s ease, left 0.3s ease;
   z-index: 1;
 }
 
 .sidebar.visible {
-  left: 0; /* Moves the sidebar to the correct position */
-  transform: translateX(0); /* Aligns the sidebar perfectly with the left edge of the screen */
+  left: 0;
+  transform: translateX(0);
 }
 
 .sidebar ul {
@@ -25,9 +25,9 @@
 
 .sidebar ul li {
   margin: 20px 0;
-  font-family: 'Arimo', sans-serif; /* Example font change */
-  font-size: 24px; /* Example font size */
-  font-weight: bold; /* Example font weight */
+  font-family: 'Arimo', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .sidebar ul li a {
@@ -38,30 +38,30 @@
   align-items: center;
   padding: 10px;
   border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.1s ease; /* Smooth transition for background color and scale */
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .sidebar ul li a.active {
   background-color: #E9CFEC;
   font-weight: bold;
-  transform: scale(1.05); /* Slightly scale up the active item */
+  transform: scale(1.05);
 }
 
 .sidebar ul li a:hover {
   font-weight: bold;
   color: #000000;
-  transform: scale(1.05); /* Scale up slightly on hover */
+  transform: scale(1.05);
 }
 
 .sidebar ul li a:active {
-  transform: scale(0.95); /* Slightly scale down on click */
-  transition: transform 0.1s ease; /* Make the click effect quick and responsive */
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 .sidebar-icon {
-  width: 24px; /* Set the width to 24px */
-  height: 24px; /* Set the height to 24px */
-  margin-right: 10px; /* Space between the icon and the text */
-  vertical-align: middle; /* Aligns the icon with the text */
-  object-fit: contain; /* Ensures the image scales correctly without distortion */
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  vertical-align: middle;
+  object-fit: contain;
 }
