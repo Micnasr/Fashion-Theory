@@ -38,5 +38,5 @@ Looking ahead, we plan to expand Fashion Theory with features that further enhan
 ![wardrobe](https://github.com/user-attachments/assets/dda74bd6-84e1-4966-9fd4-4643f2bc86d6)
 ![wardrobe2](https://github.com/user-attachments/assets/e2aad184-d6d5-43a5-a03e-adbcc109c8ab)
 ![favorite](https://github.com/user-attachments/assets/53e29286-3378-4263-8e9f-e7d92200776f)
-![camera](https://github.com/user-attachments/assets/7f056087-33ea-4884-b649-cfe3fb229d5c)
+![camera](https://github.com/user-attachments/assets/826565f0-9a1e-4d31-8246-b42b10d24d02)
 ![upload](https://github.com/user-attachments/assets/95a3f256-5816-4d1b-a8a6-1ecfe6f1704f)
