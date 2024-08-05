@@ -29,3 +29,14 @@ Throughout the development of Fashion Theory, we learned the importance of user-
 ## What's Next for Fashion Theory
 
 Looking ahead, we plan to expand Fashion Theory with features that further enhance user engagement and sustainability. This includes adding more advanced outfit recommendations based on weather, occasion, and personal style preferences. We also aim to integrate social sharing features, allowing users to showcase their outfits and get feedback from a community of like-minded individuals. In line with our sustainability goals, we may explore partnerships with eco-friendly brands to offer users suggestions for sustainable clothing options. Our ultimate goal is to make Fashion Theory not just a tool, but a movement towards more mindful and sustainable fashion. Next time, you might just pull out our handy Fashion Theory before buying that new jacket, as Fashion Theory can help you curate a stunning fresh look regardless of what you own!
+
+## Pictures
+
+![image](https://github.com/user-attachments/assets/1640ce87-e86a-49d1-9269-2b4777b99d6a)
+![outfitsmain](https://github.com/user-attachments/assets/5c6ecd75-9a26-425e-8b5e-dc06705ee4e7)
+![outfits](https://github.com/user-attachments/assets/d29566b7-dc1f-493a-bc82-33d37ee45af5)
+![wardrobe](https://github.com/user-attachments/assets/dda74bd6-84e1-4966-9fd4-4643f2bc86d6)
+![wardrobe2](https://github.com/user-attachments/assets/e2aad184-d6d5-43a5-a03e-adbcc109c8ab)
+![favorite](https://github.com/user-attachments/assets/53e29286-3378-4263-8e9f-e7d92200776f)
+![camera](https://github.com/user-attachments/assets/7f056087-33ea-4884-b649-cfe3fb229d5c)
+![upload](https://github.com/user-attachments/assets/95a3f256-5816-4d1b-a8a6-1ecfe6f1704f)
